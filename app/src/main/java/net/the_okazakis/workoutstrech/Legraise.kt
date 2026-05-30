@@ -33,7 +33,9 @@ class Legraise : BaseActivity() {
                     }
 
                     in 1..20 -> {
+
                         if(isUp) {
+                            nn++
                             tv2.text = getString(R.string.up) + "  $nn/10"
                             playSoundSingle(sndup)
                             isUp = false
@@ -41,18 +43,22 @@ class Legraise : BaseActivity() {
                             tv2.text = getString(R.string.down)+ "  $nn/10"
                             playSoundSingle(snddown)
                             isUp = true
-                            nn++
+
                         }
                     }
                     21 -> {
+
                         if (nn >=10) {
                             num = -(11) // 10s relax
-                            tv2.text = getString(R.string.relax10)
-                            playSoundSingle(snd10re)
-                            isStart = false
-                            nn=1
+                            nn=0
                             extimes++
-                        }
+                            if(extimes <= maxextimes) {
+                                tv2.text = getString(R.string.relax10)
+                                playSoundSingle(snd10re)
+                                isStart = false
+                            }
+                            }
+
                     }
                     else -> {}
                 }

@@ -11,11 +11,6 @@ class Momomae : BaseActivity() {
             if (extimes <= maxextimes) {
                 when (num) {
                     1 -> {
-                        if (!isFirsttime) {
-                            tv2.text = "足を変えて"
-                            playSoundSingle(sndchangleg)
-                        }
-                        isFirsttime = false
                         tv.text = "${extimes}/$maxextimes セット"
                     }
                     2 ->{
@@ -27,18 +22,12 @@ class Momomae : BaseActivity() {
                         playSoundSingle(sndkeep30s)
                     }
                     in 4..33 -> {
-                        tv2.text = "${num-3}"
-                        playSoundSingle(sounds[num-4])
+                        tv2.text = "${num - 3}"
+                        playSoundSingle(sounds[num - 4])
                     }
 
-                    34 -> {
-                        num = 0
-                        if(!isFirstleg)
-                        {  //足を変えた場合
-                            extimes ++
-                        }
-                        isFirstleg = !isFirstleg    //足を変える
-                    }
+                    34 ->{ extimes++}
+
                 }
                 // ← これ追加
                 handler.postDelayed(this, 1000)
@@ -72,7 +61,7 @@ class Momomae : BaseActivity() {
 
         // 各種クリックリスナー
         btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
         }
 
 

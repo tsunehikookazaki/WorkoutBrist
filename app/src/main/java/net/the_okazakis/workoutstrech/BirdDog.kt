@@ -80,11 +80,11 @@ class BirdDog :  BaseActivity() {
         //説明文
         val myExplanation =
             "脊柱起立筋の筋トレ（バードドッグ）\n四つ這いになり、両手と両足は肩幅に開きます。" +
-                    "\n右手は肘を伸ばし、左足は膝をつたまま足先を上げる。" +
+                    "\n右手は肘を伸ばし、左足は膝をつたまま足先を上げる。または足を水平に上げ、" +
                     "そのままの姿勢をキープ（キープは３秒が標準　最大10秒）。\n手足を元に戻し、反対側も同じようにする。" +
                     "\n手足を上げるときに、腰を反ったり、姿勢が崩れないように注意する。" +
                     "\n\n左右5回ずつが1セット。1セット標準" +
-                    "\n膝を付かずに水平に伸ばすのが普通のバードドックですが、運動の強度が高いので、膝をついて行います"
+                    "\n膝を付かずに水平に伸ばすのが普通のバードドックですが、運動の強度が高いので、膝をついて行います。力がついたら足を水平に上げます\n"
 
         val StandardText = "1セットの秒数は3秒（最大30秒）、左右5回（運動回数５）ずつが標準\n運動回数　最大99回　１セットの秒数　最大30秒"
         val maxLimit = 99 // 👈【追加】上限値を決める
@@ -96,7 +96,7 @@ class BirdDog :  BaseActivity() {
 
         // 各種クリックリスナー
         btnstart.setOnClickListener {
-            setUIForStarting(runnable,-1,btnback, btnChangeTimes, btnyoutube)
+            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
         }
 
 
@@ -110,7 +110,7 @@ class BirdDog :  BaseActivity() {
         }
 
         btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -1, btnback,btnyoutube, btnChangeTimes)
+            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
         }
 
         btnback.setOnClickListener {
@@ -119,7 +119,7 @@ class BirdDog :  BaseActivity() {
         //Youtubeのリンクを開く
         btnyoutube.setOnClickListener {
             // 固有のURLを渡すだけ
-            openYoutube("https://youtu.be/-GQKKD0JtMo")
+            openYoutube("https://youtu.be/7laXS5K4KcU")
         }
 
 

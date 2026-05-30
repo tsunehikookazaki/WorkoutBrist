@@ -21,7 +21,7 @@ class Kamatasquatwide :  BaseActivity() {
                         tv2.text = "${num-1}"
                         playSoundSingle(sounds[num - 2])
                     }
-                    in 6..7 -> {
+                    in 5..7 -> {
                         tv2.text = "耐えて"
                         playSoundSingle(sndtaete)
                     }
@@ -31,8 +31,11 @@ class Kamatasquatwide :  BaseActivity() {
                     }
 
                     in 9..11 -> {
-                        tv2.text = "${num-9}"
-                        playSoundSingle(sounds[num - 2])
+                        tv2.text = "${num-8}"
+                        playSoundSingle(sounds[num - 9])
+
+                    }
+                    12 ->{
                         num = 0; extimes++
                     }
                 }
@@ -60,7 +63,7 @@ class Kamatasquatwide :  BaseActivity() {
                 "\n内ももが張るのに耐える。ゆっくり息を吸いながら(吐きながら)腰を上げる。" +
                 "\n太ももの内側が張るような感じが大事。背中が曲がらないように。" +
                 "膝が内側に入らないように気を付ける。" +
-                "呼吸を止めない\n\n10回で1セット。1セット標準"
+                "呼吸を止めない\n\n10回で1セット。1セット標準\n\n"
 
         val StandardText ="10回で1セット。1セット標準。"
         val masxlimit = 99

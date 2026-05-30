@@ -73,7 +73,7 @@ class AshiuranobashiTachi : BaseActivity() {
 
         // 各種クリックリスナー
         btnstart.setOnClickListener {
-            setUIForStarting(runnable,-1,btnback, btnChangeTimes, btnyoutube)
+            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
         }
 
 
@@ -87,7 +87,7 @@ class AshiuranobashiTachi : BaseActivity() {
         }
 
         btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -1, btnback,btnyoutube, btnChangeTimes)
+            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
         }
 
         btnback.setOnClickListener {

@@ -19,7 +19,7 @@ class HipLift : BaseActivity() {
                     -10 -> {
                         if (!isStart) {
                             speedTime = normalspeedTime
-                            tv2.text = "10秒休みです"
+                            tv2.text = "10秒リラックス"
                             playSoundSingle(snd10re)
                         }
                     }
@@ -57,7 +57,7 @@ class HipLift : BaseActivity() {
 
                         tv2.text = getString(R.string.down) + " ${nn + 1}回"
                         playSoundSingle(snddown)
-                        if (nn < 19) {
+                        if (nn < 9) {
                             num = 0
                             nn++
                         } else {
@@ -88,15 +88,15 @@ class HipLift : BaseActivity() {
         btnspeed.visibility = View.VISIBLE
 
         val myExplanation =
-            "床に寝て、膝を曲げる。足はべた足。お尻に力を入れ腰を上げ下げする。\nおしりを下げた時床に着けない。" +
+            "床に寝て、膝を曲げる。足はべた足。お尻に力を入れ足を踏ん張るように腰を上げ下げする。\nおしりを下げた時床に着けない。" +
                     "おしりを上げた時に足が浮かないように。腰で上げないよう、お尻を触って、力が入っていることを確認。" +
                     "\nレベル1：両手を体側につく\nレベル2：手は胸におく" +
                     "\nレベル３：片足を上げて、反対の足に載せ、手はつく\nレベル４：片足を上げ伸ばし、両手は胸におく。" +
                     "上げた足は反対の足と同じ高さをキープ。両手を伸ばし、上にあげて掌をつけるのが最高。" +
                     "\nSPEEDボタンでスピードアップ"+
-                    "\n\n左右それぞれ20回が1セット。1セットが標準　　片足を上げた場合はそれぞれ１セットずつ、合計２セット"
+                    "\n\n左右それぞれ10回が1セット。合計２セットが標準　　片足を上げた場合はそれぞれ１セットずつ、合計２セット\n\n"
 
-        val StandardText = "左右それぞれ20回が1セット。\n1セット（回）が標準\n片足を上げた場合はそれぞれ１セットずつ\n合計２セット(回)が標準\n最大99回\nSPEEDボタンでも同じ"
+        val StandardText = "10回が1セット。左右それぞれ1セット合計２セット（回）が標準\n片足を上げた場合はそれぞれ１セットずつ、合計２セット(回)が標準\n最大99回\nSPEEDボタンでも同じ"
         val masxlimit = 99
         val maxRep =30
 

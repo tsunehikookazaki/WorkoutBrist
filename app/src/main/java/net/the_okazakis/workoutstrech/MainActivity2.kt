@@ -99,7 +99,7 @@ class MainActivity2 : AppCompatActivity() {
         cursor0.close()
 
         // --- ④ 特定の種目（ID 12以外）でRepsエリアを非表示にする動的制御 ---
-        val dynamicIds = listOf(12)
+        val dynamicIds = listOf(12,18)
 
         if (!dynamicIds.contains(_workoutId)) {
             // Repsのテキストと入力欄を非表示

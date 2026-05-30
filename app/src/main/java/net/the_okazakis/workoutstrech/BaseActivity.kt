@@ -41,6 +41,7 @@ open class BaseActivity : AppCompatActivity() {
     protected var num = 0
     protected var nn = 0
     protected var speedTime = 1000L
+    protected var softspeedTime = 1200L
     protected var normalspeedTime = 1000L
     protected var speedspeedTime = 700L
     protected var isSpeed = false
@@ -402,6 +403,10 @@ open class BaseActivity : AppCompatActivity() {
 
             //    RecordManager.saveRecord(this, "${_workoutId}$workmenu")
             RecordManager.saveRecord(this, "%02d%s".format(_workoutId, workmenu))
+
+            // 💡【追加】LetsDoItの窓口へ、アプリキー「strech」として完了したメニュー名を送信
+            SharedRecordManager.updateStats(this, "strech", workmenu)
+
                 isSaved = true
                 tvMessage.text = getString(R.string.good_job)
                 onSaveComplete()

@@ -29,7 +29,13 @@ class LogActivity : AppCompatActivity() {
                 .setTitle("確認")
                 .setMessage("すべての記録を削除してもよろしいですか？")
                 .setPositiveButton("はい") { _, _ ->
+                    // アプリ内のローカル記録を削除
                     RecordManager.clearRecords(this)
+
+                    // 💡【追加】LetsDoItへ「未実施」を通知し、stats.jsonから削除
+                    SharedRecordManager.clearAppStats(this, "strech")
+
+                    // テーブル表示の更新
                     tableLayout.removeAllViews()
                     showWeeklyTable(tableLayout)
                 }

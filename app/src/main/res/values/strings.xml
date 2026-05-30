@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Workout Strech base</string>
+    <string name="app_name">Workout StrechPro1.00</string>
     <string-array name="lv_menu">
         <item>腓腹筋伸ばし</item>
         <item>つま先立ち</item>

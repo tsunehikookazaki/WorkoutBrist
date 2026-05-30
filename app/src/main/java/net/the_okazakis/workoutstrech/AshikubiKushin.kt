@@ -42,7 +42,7 @@ class AshikubiKushin : BaseActivity() {
         setContentView(R.layout.activity_sub)
 
         //説明文
-        val myExplanation = "膝を伸ばして座り、足首をゆっくり手前に曲げ、次に向こう側に伸ばす。\n" +
+        val myExplanation = "膝を伸ばして座るか、床に寝る。足首をゆっくり手前に曲げ、次に向こう側に伸ばす。\n" +
                 "ふくらはぎ、足の甲が伸びているのを感じる。\n\n15回標準。"
 
         val StandardText = "15回標準　最大99回"

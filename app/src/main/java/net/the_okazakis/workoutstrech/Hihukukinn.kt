@@ -76,7 +76,7 @@ class Hihukukinn : BaseActivity() {
 
         // 各種クリックリスナー
         btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
         }
 
 
@@ -90,7 +90,7 @@ class Hihukukinn : BaseActivity() {
         }
 
         btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -2, btnback,btnyoutube, btnChangeTimes)
+            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
         }
 
         btnback.setOnClickListener {

@@ -55,7 +55,8 @@ class Ashijanken :BaseActivity() {
         //説明文
         val myExplanation =
              "足の指でグー、チョキ(裏)　パーをする。" +
-                "\nグー指はなるべく深く曲げる。チョキ、パーはなるべく大きく開く" +
+                "\nグー指はなるべく深く曲げる。チョキ、パーはなるべく大きく開く." +
+                     " グーのこぶしが出るように" +
                 "\n\nグー　チョキ　パーを16回標準"
 
         val StandardText = "グー）チョキ　パー、グー（裏）チョキ　パーを各8回　16回標準\n最大99"
@@ -92,7 +93,7 @@ class Ashijanken :BaseActivity() {
 
         btnyoutube.setOnClickListener {
             // 固有のURLを渡すだけ
-            openYoutube("https://youtu.be/p6agyQN2gco")
+            openYoutube("https://youtu.be/p6agyQN2gco?t=102")
         }
 
         btnChangeTimes.setOnClickListener {

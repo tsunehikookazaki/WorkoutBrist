@@ -38,7 +38,7 @@ class Forwardlunge : BaseActivity() {
                     else ->{}
                 }
                 // ← これ追加
-                handler.postDelayed(this, 1000)
+                handler.postDelayed(this, speedTime)
 
             } else {
                 handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
@@ -58,20 +58,25 @@ class Forwardlunge : BaseActivity() {
 
         //説明文
         val myExplanation =
-            "膝の筋力アップ(フロントランジ)\n胸を張って、手を腰に当て、片方の足をゆっくり前に。大きく踏み出す。後ろの膝がつきそうなくらい腰を下ろし、ゆっくり元に戻る。反対の足も同じように。10回で1セット。1セット標準。"
+            "膝の筋力アップ(フロントランジ)\n胸を張って、手を腰に当て、片方の足をゆっくり前に," +
+                    "大きく踏み出す。後ろの膝がつきそうなくらい腰を下ろし、" +
+                    "ゆっくり元に戻る。反対の足も同じように。10回で1セット。1セット標準。" +
+                    "1セットの回(秒)数が10で標準スピード　12でやや遅く　20が半分のスピード"
+
 
         val StandardText = "10回で1セット。1セット標準"
         val masxlimit = 99
-        val maxRep =30
+        val maxRep =21
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation)
+
         // 音声をロード
         loadAllStandardSounds()
 
         // 各種クリックリスナー
         btnstart.setOnClickListener {
-            setUIForStarting(runnable,-1,btnback, btnChangeTimes, btnyoutube)
+            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
         }
 
 
@@ -85,7 +90,7 @@ class Forwardlunge : BaseActivity() {
         }
 
         btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -1, btnback,btnyoutube, btnChangeTimes)
+            setUIForSpeedStarting(runnable, -2, btnback,btnyoutube, btnChangeTimes)
         }
 
         btnback.setOnClickListener {
@@ -101,6 +106,8 @@ class Forwardlunge : BaseActivity() {
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
         loadSettingsTick()
+        //スピードを変える
+        speedTime = maxReps.toLong()*100
     }
     override fun onDestroy() {
         _helper.close()
@@ -111,6 +118,7 @@ class Forwardlunge : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick()
+        normalspeedTime = maxReps.toLong()*100
         tv.text = "1/${maxextimes} 回"   // ← UIも更新
     }
 }

@@ -16,29 +16,29 @@ class ChairSquat :  BaseActivity() {
                         playSoundSingle(sndstand)
                     }
 
-                    in 2..8 -> {
-                        if (num in 2..8) {
+                    in 2..5 -> {
+                        if (num in 2..5) {
                             playSoundSingle(sounds[num - 2])
                         }
 
                         tv2.text = "${num - 1} 秒"
                     }
 
-                    9 -> {
+                    6 -> {
                         tv2.text = getString(R.string.sitdown)
                         playSoundSingle(sndsit)
 
                     }
 
-                    in 10..16 -> {
-                        if (num in 10..16) {
-                            playSoundSingle(sounds[num - 10])
+                    in 7..10 -> {
+                        if (num in 7..10) {
+                            playSoundSingle(sounds[num - 7])
                         }
-                        tv2.text = "${num - 9} 秒"
+                        tv2.text = "${num - 6} 秒"
                     }
 
 
-                    17 -> {
+                    11 -> {
                         num = 0; extimes++
                     }
                     else -> {}
@@ -63,9 +63,9 @@ class ChairSquat :  BaseActivity() {
 
         //説明文
         val myExplanation =
-            "椅子に座り（腰掛ける程度）、両足を肩幅に広げ、ゆっくり立つ。立ち上がったら、ゆっくり（座るイメージで）腰を下ろす。\n膝がつま先より出ないように。背中が曲がらないように。\n\n10回で1セット。1セット標準。"
+            "椅子に座り（腰掛ける程度）、両足を肩幅に広げつま先と膝を同じ方向に向ける、ゆっくり立つ。立ち上がったら、ゆっくり（座るイメージで）腰を下ろす。\n膝がつま先より出ないように。背中が曲がらないように。反動をつけない\n\n10回で1セット。1～2セット標準。"
 
-        val StandardText = "10回で1セット。1セット標準"
+        val StandardText = "10回で1セット。1～2セット標準"
         val masxlimit = 99
         val maxRep =30
 
@@ -99,7 +99,7 @@ class ChairSquat :  BaseActivity() {
         //Youtubeのリンクを開く
         btnyoutube.setOnClickListener {
             // 固有のURLを渡すだけ
-            openYoutube("https://youtu.be/HRFZaerM7jY?t=11")
+            openYoutube("https://youtu.be/61gktuGYKfI")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
