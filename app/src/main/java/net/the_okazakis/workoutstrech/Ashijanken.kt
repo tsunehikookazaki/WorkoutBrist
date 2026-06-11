@@ -49,7 +49,6 @@ class Ashijanken :BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _helper = DatabaseHelper(applicationContext)
         setContentView(R.layout.activity_sub)
 
         //説明文
@@ -103,7 +102,7 @@ class Ashijanken :BaseActivity() {
         loadSettingsTick()
     }
     override fun onDestroy() {
-        _helper.close()
+
         soundPool.release()
         super.onDestroy()
     }

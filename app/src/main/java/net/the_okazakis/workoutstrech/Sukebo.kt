@@ -1,6 +1,7 @@
 package net.the_okazakis.workoutstrech
 
 import android.os.Bundle
+import android.view.View
 
 class Sukebo : BaseActivity() {
 
@@ -40,9 +41,9 @@ class Sukebo : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _helper = DatabaseHelper(applicationContext)  // ←これ追加
-        setContentView(R.layout.activity_sub)
 
+        setContentView(R.layout.activity_sub)
+        setContentView(R.layout.activity_sub)
         val myExplanation =
             "椅子に腰かけ、スケボーに両足をのせて足を曲げ伸ばす。\n" +
                 "つま先、かかとがスケボーから離れないように。\n\n10回で1セット。1セットが標準。" +
@@ -56,6 +57,9 @@ class Sukebo : BaseActivity() {
         initializeStandardSettings(myExplanation)
         // 音声をロード
         loadAllStandardSounds()
+
+        // YouTubeボタンを非表示
+        btnyoutube.visibility = View.INVISIBLE
 
         // 各種クリックリスナー
         btnstart.setOnClickListener {
@@ -92,7 +96,7 @@ class Sukebo : BaseActivity() {
 
     }
     override fun onDestroy() {
-        _helper.close()
+
         soundPool.release()
         super.onDestroy()
     }

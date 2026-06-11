@@ -30,7 +30,6 @@ open class BaseActivity : AppCompatActivity() {
     // --- 共通の変数 ---
     protected  val handler = Handler(Looper.getMainLooper())
     protected lateinit var soundPool: SoundPool
-    protected lateinit var _helper: DatabaseHelper
     protected var _workoutId = 0
     protected var timeCount = 0
     protected var workmenu: String = ""
@@ -201,7 +200,7 @@ open class BaseActivity : AppCompatActivity() {
 
     // --- 初期化：Intent・DB・UI・SoundPoolを一括設定 ---
     protected fun initializeStandardSettings(explanation: String,) {
-        _helper = DatabaseHelper(applicationContext)
+
 
         // Intentデータ取得
         countVolume = intent.getFloatExtra("TEXT_KEY", 1.0f)
@@ -279,25 +278,19 @@ open class BaseActivity : AppCompatActivity() {
     }
     open fun loadSettingsTick() {
 
-        val (times, reps) = getDatabaseSettings(_workoutId)
+        val (times, reps) = getPreferenceSettings(_workoutId)
 
         maxextimes = times
         maxReps = reps
     }
-    //データーベースから値を持ってくる
-    protected fun getDatabaseSettings(workoutId: Int): Pair<Int, Int> {
-        var times = 10
-        var reps = 5
-        val db = _helper.readableDatabase
-        val cursor = db.rawQuery(
-            "SELECT times, reps FROM workouttimes WHERE _id = ?",
-            arrayOf(workoutId.toString())
-        )
-        if (cursor.moveToNext()) {
-            times = cursor.getString(0).toIntOrNull() ?: 10
-            reps = cursor.getString(1).toIntOrNull() ?: 5
-        }
-        cursor.close()
+    //プリファレンスから値を持ってくる
+    protected fun getPreferenceSettings(workoutId: Int): Pair<Int, Int> {
+
+        val pref = getSharedPreferences("WorkoutSettings", MODE_PRIVATE)
+
+        val times = pref.getInt("times_$workoutId", 2)
+        val reps = pref.getInt("reps_$workoutId", 15)
+
         return Pair(times, reps)
     }
 
@@ -415,7 +408,6 @@ open class BaseActivity : AppCompatActivity() {
 
 
     override fun onDestroy() {
-        if (::_helper.isInitialized) _helper.close()
         if (::soundPool.isInitialized) soundPool.release()
         super.onDestroy()
     }

@@ -75,7 +75,7 @@ class Legraise : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _helper = DatabaseHelper(applicationContext)  // ←これ追加
+
         setContentView(R.layout.activity_sub)
 
         val myExplanation =
@@ -126,7 +126,7 @@ class Legraise : BaseActivity() {
 
     }
     override fun onDestroy() {
-        _helper.close()
+
         soundPool.release()
         super.onDestroy()
     }

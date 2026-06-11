@@ -38,7 +38,7 @@ class AshikubiKushin : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _helper = DatabaseHelper(applicationContext)  // ←これ追加
+
         setContentView(R.layout.activity_sub)
 
         //説明文
@@ -88,7 +88,7 @@ class AshikubiKushin : BaseActivity() {
         loadSettingsTick()
     }
     override fun onDestroy() {
-        _helper.close()
+
         soundPool.release()
         super.onDestroy()
     }

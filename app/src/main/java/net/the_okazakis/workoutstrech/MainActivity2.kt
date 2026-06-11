@@ -19,10 +19,6 @@ class MainActivity2 : AppCompatActivity() {
      */
     private var _workoutId = -1
 
-    /**
-     * データベースヘルパーオブジェクト。
-     */
-    private lateinit var _helper: DatabaseHelper
 
     /**
      * 画面生成時に呼ばれ、データベースから保存されている回数を読み込んで表示します。
@@ -31,7 +27,6 @@ class MainActivity2 : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _helper = DatabaseHelper(applicationContext)
         setContentView(R.layout.activity_main2)
 
         // --- ① すべてのViewを取得して一括宣言（ここで1回だけ宣言！） ---
@@ -40,6 +35,9 @@ class MainActivity2 : AppCompatActivity() {
         val etReps = findViewById<EditText>(R.id.etReps)
         val tvRepsLabel = findViewById<TextView>(R.id.textViewRepsLabel)
         val btnSave: Button = findViewById(R.id.btnSave)
+
+        //プリファレンス
+        val pref = getSharedPreferences("WorkoutSettings", MODE_PRIVATE)
 
         // プラスマイナスボタンの取得
         val btnTimesMinus = findViewById<Button>(R.id.btnTimesMinus)
@@ -66,37 +64,23 @@ class MainActivity2 : AppCompatActivity() {
         val maxRepsLimit = intent.getIntExtra("MAX_REPS_LIMIT", 99) // 👇【追加】
 
         // --- ③ データベースから初期値を読み込んでEditTextにセット ---
-        val db0 = _helper.writableDatabase
-        val sql0 = "SELECT * FROM workouttimes WHERE _id = $_workoutId"
-        val cursor0 = db0.rawQuery(sql0, null)
+        var times0 = pref.getInt("times_$_workoutId", 2).toString()
+        var reps0 = pref.getInt("reps_$_workoutId", 15).toString()
 
-        var times0: String
-        var reps0: String
-        while (cursor0.moveToNext()) {
-            val idxTimes = cursor0.getColumnIndex("times")
-            val idxReps = cursor0.getColumnIndex("reps")
-
-            times0 = cursor0.getString(idxTimes)
-            reps0 = cursor0.getString(idxReps) ?: "15"
-
-            // 読み込んだ値が、送られてきた上限値を超えていたら警告して制限する
-            val timesInt = times0.toIntOrNull() ?: 0
-            if (timesInt > maxLimit) {
-                times0 = maxLimit.toString()
-                // 👇【追加】画面が開いた時に上限オーバーならアラートを出す
-                showLimitAlert(maxLimit)
-            }
-        // 👇【追加】2つ目の値（Reps）の制限
-            val repsInt = reps0.toIntOrNull() ?: 0
-            if (repsInt > maxRepsLimit) {
-                reps0 = maxRepsLimit.toString()
-                showLimitAlert(maxRepsLimit) // 2つ目の値が超えていた場合もアラートを出す
-            }
-
-            etTimes.setText(times0)
-            etReps.setText(reps0)
+        val timesInt = times0.toIntOrNull() ?: 0
+        if (timesInt > maxLimit) {
+            times0 = maxLimit.toString()
+            showLimitAlert(maxLimit)
         }
-        cursor0.close()
+
+        val repsInt = reps0.toIntOrNull() ?: 0
+        if (repsInt > maxRepsLimit) {
+            reps0 = maxRepsLimit.toString()
+            showLimitAlert(maxRepsLimit)
+        }
+
+        etTimes.setText(times0)
+        etReps.setText(reps0)
 
         // --- ④ 特定の種目（ID 12以外）でRepsエリアを非表示にする動的制御 ---
         val dynamicIds = listOf(12,18)
@@ -127,24 +111,13 @@ class MainActivity2 : AppCompatActivity() {
             var reps = etReps.text.toString()
             if (reps == "") { reps = "15" }
 
-            val db = _helper.writableDatabase
-
-            // 古いデータを削除
-            val sqlDelete = "DELETE FROM workouttimes WHERE _id = ?"
-            var stmt = db.compileStatement(sqlDelete)
-            stmt.bindLong(1, _workoutId.toLong())
-            stmt.executeUpdateDelete()
-
-            // 新規データをインサート
-            val sqlInsert = "INSERT INTO workouttimes (_id, times, reps) VALUES (?, ?, ?)"
-            stmt = db.compileStatement(sqlInsert)
-            stmt.bindLong(1, _workoutId.toLong())
-            stmt.bindString(2, times)
-            stmt.bindString(3, reps)
-            stmt.executeInsert()
+            pref.edit()
+                .putInt("times_$_workoutId", times.toInt())
+                .putInt("reps_$_workoutId", reps.toInt())
+                .apply()
 
             btnSave.isEnabled = false
-            this.finish()
+            finish()
         }
 
         // --- ⑥ プラスマイナスボタンのクリックリスナーを設定 ---
@@ -207,14 +180,4 @@ class MainActivity2 : AppCompatActivity() {
             .show()
     }
 
-
-
-    /**
-     * Activityが破棄される直前に呼び出されます。
-     * データベースへの接続（DatabaseHelper）を安全に閉じます。
-     */
-    override fun onDestroy() {
-        _helper.close()
-        super.onDestroy()
-    }
 }

@@ -52,7 +52,7 @@ class Forwardlunge : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _helper = DatabaseHelper(applicationContext)  // ←これ追加
+
         setContentView(R.layout.activity_sub)
 
 
@@ -64,7 +64,7 @@ class Forwardlunge : BaseActivity() {
                     "1セットの回(秒)数が10で標準スピード　12でやや遅く　20が半分のスピード"
 
 
-        val StandardText = "10回で1セット。1セット標準"
+        val StandardText = "10回で1セット。1セット標準\n1セットの回(秒)数が10で標準スピード　12でやや遅く　20が半分のスピード"
         val masxlimit = 99
         val maxRep =21
 
@@ -110,7 +110,7 @@ class Forwardlunge : BaseActivity() {
         speedTime = maxReps.toLong()*100
     }
     override fun onDestroy() {
-        _helper.close()
+
         soundPool.release()
         super.onDestroy()
     }
