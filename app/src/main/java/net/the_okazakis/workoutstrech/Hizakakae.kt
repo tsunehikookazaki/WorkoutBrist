@@ -105,13 +105,6 @@ class Hizakakae : BaseActivity() {
         loadSettingsTick()
 
     }
-    override fun onDestroy() {
-
-        soundPool.release()
-        super.onDestroy()
-    }
-
-    // 👇ここに書く（onCreateの下）
     override fun onResume() {
         super.onResume()
         loadSettingsTick()

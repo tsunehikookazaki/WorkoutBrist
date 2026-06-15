@@ -102,8 +102,7 @@ class Ashijanken :BaseActivity() {
         loadSettingsTick()
     }
     override fun onDestroy() {
-
-        soundPool.release()
+        // soundPool.release() // サービスで共有しているため、Activityでは解放しない
         super.onDestroy()
     }
 

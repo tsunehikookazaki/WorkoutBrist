@@ -1,16 +1,21 @@
 package net.the_okazakis.workoutstrech
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.media.AudioAttributes
 import android.media.SoundPool
+import android.os.Bundle
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Handler
-import android.os.Looper
-import android.widget.ImageButton
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -22,14 +27,36 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var btnstart: Button
     protected lateinit var btnstop: Button
     protected lateinit var btnrerstart: Button
-    //protected lateinit var btnyoutube: Button
     protected lateinit var btnChangeTimes: Button
     protected lateinit var btnspeed: Button
     protected lateinit var btnyoutube: ImageButton
 
-    // --- 共通の変数 ---
-    protected  val handler = Handler(Looper.getMainLooper())
+    // --- サービス関連 ---
+    protected var workoutService: WorkoutService? = null
+    protected var isBound = false
+    
+    // サブクラスとの互換性のために保持。Serviceから取得する。
     protected lateinit var soundPool: SoundPool
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as WorkoutService.LocalBinder
+            workoutService = binder.getService()
+            workoutService?.getSoundPool()?.let { soundPool = it }
+            isBound = true
+            
+            // 接続されたら音源をロードする
+            loadAllStandardSounds()
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            isBound = false
+            workoutService = null
+        }
+    }
+
+    // --- 共通の変数 ---
+    protected val handler = Handler(Looper.getMainLooper())
     protected var _workoutId = 0
     protected var timeCount = 0
     protected var workmenu: String = ""
@@ -51,23 +78,24 @@ open class BaseActivity : AppCompatActivity() {
     protected var choki = true
     protected var isFirstleg = false
     protected var isStart = true
+
     // --- 共通のサウンドID ---
     protected var sndstr = 0
     protected var sndend = 0
     protected var sndup = 0
     protected var snddown = 0
     protected var sndchangleg = 0
-    protected var sndstand =0
-    protected var sndsit =0
-    protected var sndgo =0
-    protected var sndchoki =0
-    protected var sndurachoki =0
-    protected var sndpa =0
-    protected var sndstre =0
-    protected var sndbent =0
-    protected var sndnon =0
-    protected var sndtaoshite =0
-    protected var sndkeep30s =0
+    protected var sndstand = 0
+    protected var sndsit = 0
+    protected var sndgo = 0
+    protected var sndchoki = 0
+    protected var sndurachoki = 0
+    protected var sndpa = 0
+    protected var sndstre = 0
+    protected var sndbent = 0
+    protected var sndnon = 0
+    protected var sndtaoshite = 0
+    protected var sndkeep30s = 0
     protected var sndkeep = 0
     protected var sndloosen = 0
     protected var sndtsubu = 0
@@ -75,9 +103,9 @@ open class BaseActivity : AppCompatActivity() {
     protected var sndkeep3s = 0
     protected var sndkaeteagete = 0
     protected var sndbreak = 0
-    protected var sndright=0
-    protected var sndleft=0
-    protected var sndback=0
+    protected var sndright = 0
+    protected var sndleft = 0
+    protected var sndback = 0
     protected var sndkeep1s = 0
     protected var sndtsubushite = 0
     protected var snd10re = 0
@@ -99,155 +127,128 @@ open class BaseActivity : AppCompatActivity() {
     protected var sndholdknee = 0
     protected var sndstretch = 0
     protected var sndbend = 0
-    // 秒数用
-    // 秒数用はリストにまとめる（個別の snd1..15 は削除！）
-    // 音源IDを保持するリスト（Ashiage.ktなどで使う用）
+    
     protected val sounds: MutableList<Int> = mutableListOf()
     protected val soundskeep: MutableList<Int> = mutableListOf()
 
-    // 音源を一括ロードする共通メソッド
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // SoundPoolを初期化（遅延初期化エラー回避用の暫定。Service接続後に差し替わる）
+        val aa = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+            .build()
+        soundPool = SoundPool.Builder().setAudioAttributes(aa).setMaxStreams(5).build()
+
+        // サービスにバインド
+        val intent = Intent(this, WorkoutService::class.java)
+        bindService(intent, connection, Context.BIND_AUTO_CREATE)
+    }
+
     protected fun loadAllStandardSounds() {
-        // 固定音のロード
-        sndstr = soundPool.load(this, R.raw.start, 1)
-        sndend = soundPool.load(this, R.raw.goodjob, 1)
-        sndup = soundPool.load(this, R.raw.up, 1)
-        sndchangleg = soundPool.load(this, R.raw.changeleg, 1)
-        sndstand = soundPool.load(this, R.raw.slowstand, 1)
-        sndsit = soundPool.load(this, R.raw.sitslow, 1)
-        sndgo = soundPool.load(this, R.raw.gu, 1)
-        sndchoki = soundPool.load(this, R.raw.choki, 1)
-        sndurachoki = soundPool.load(this, R.raw.urachoki, 1)
-        sndpa = soundPool.load(this, R.raw.pa, 1)
-        sndstre = soundPool.load(this, R.raw.stretch, 1)
-        sndbent = soundPool.load(this, R.raw.bend, 1)
-        sndnon = soundPool.load(this, R.raw.nosound, 1)
-        sndtaoshite = soundPool.load(this, R.raw.taoshite, 1)
-        sndkeep30s = soundPool.load(this, R.raw.keep30s, 1)
-        sndkeep = soundPool.load(this, R.raw.v10, 1) // keep10sec was missing, using v10 as fallback
-        sndloosen = soundPool.load(this, R.raw.loosen, 1)
-        sndtsubu = soundPool.load(this, R.raw.tsubushite, 1)
-        sndup = soundPool.load(this, R.raw.up, 1)
-        sndmodo = soundPool.load(this, R.raw.modo, 1)
-        sndkeep3s = soundPool.load(this, R.raw.keep3s, 1)
-        sndkaeteagete = soundPool.load(this, R.raw.kaeteagete, 1)
-        sndbreak = soundPool.load(this, R.raw.takeabreak, 1)
-        sndright = soundPool.load(this, R.raw.leftlegforward, 1) // Note: original labels might be swapped
-        sndleft = soundPool.load(this, R.raw.rightlegforward, 1)
-        sndback = soundPool.load(this, R.raw.goback, 1)
-        sndopen = soundPool.load(this, R.raw.open, 1)
-        sndslowclose = soundPool.load(this, R.raw.slowclose, 1)
-        sndkeep1s = soundPool.load(this, R.raw.keep1sec, 1)
-        sndtsubushite = soundPool.load(this, R.raw.tsubushite, 1)
-        snd10re = soundPool.load(this, R.raw.relax10sec, 1)
-        snddown = soundPool.load(this, R.raw.down, 1)
-        sndkeep20s = soundPool.load(this, R.raw.keep20s, 1)
-        sndpi = soundPool.load(this, R.raw.pi, 1)
-        sndtoesup = soundPool.load(this, R.raw.toesup, 1)
-        sndstandtoes = soundPool.load(this, R.raw.standtoes, 1)
-        snddropdown = soundPool.load(this, R.raw.dropdown, 1)
-        sndslowup = soundPool.load(this,R.raw.slowup,1)
-        sndslowdown = soundPool.load(this,R.raw.slowdown,1)
-        sndkeep5 = soundPool.load(this, R.raw.keep5sec, 1)
-        sndsizunde = soundPool.load(this, R.raw.sizunde, 1)
-        sndtaete = soundPool.load(this, R.raw.taete, 1)
-        sndhikitsuke = soundPool.load(this, R.raw.hikitsuke, 1)
-        sndslowopen = soundPool.load(this, R.raw.slowopen, 1)
-        sndkeepmama = soundPool.load(this, R.raw.keepmama, 1)
-        sndslowup = soundPool.load(this, R.raw.slowup, 1)
-        sndslowdown = soundPool.load(this, R.raw.slowdown, 1)
-        sndholdknee = soundPool.load(this, R.raw.holdknee, 1)
-        sndstretch = soundPool.load(this, R.raw.stretch, 1)
-        sndbend = soundPool.load(this, R.raw.bend, 1)
+        val sp = soundPool ?: return
+        
+        sndstr = sp.load(this, R.raw.start, 1)
+        sndend = sp.load(this, R.raw.goodjob, 1)
+        sndup = sp.load(this, R.raw.up, 1)
+        sndchangleg = sp.load(this, R.raw.changeleg, 1)
+        sndstand = sp.load(this, R.raw.slowstand, 1)
+        sndsit = sp.load(this, R.raw.sitslow, 1)
+        sndgo = sp.load(this, R.raw.gu, 1)
+        sndchoki = sp.load(this, R.raw.choki, 1)
+        sndurachoki = sp.load(this, R.raw.urachoki, 1)
+        sndpa = sp.load(this, R.raw.pa, 1)
+        sndstre = sp.load(this, R.raw.stretch, 1)
+        sndbent = sp.load(this, R.raw.bend, 1)
+        sndnon = sp.load(this, R.raw.nosound, 1)
+        sndtaoshite = sp.load(this, R.raw.taoshite, 1)
+        sndkeep30s = sp.load(this, R.raw.keep30s, 1)
+        sndkeep = sp.load(this, R.raw.v10, 1)
+        sndloosen = sp.load(this, R.raw.loosen, 1)
+        sndtsubu = sp.load(this, R.raw.tsubushite, 1)
+        sndmodo = sp.load(this, R.raw.modo, 1)
+        sndkeep3s = sp.load(this, R.raw.keep3s, 1)
+        sndkaeteagete = sp.load(this, R.raw.kaeteagete, 1)
+        sndbreak = sp.load(this, R.raw.takeabreak, 1)
+        sndright = sp.load(this, R.raw.leftlegforward, 1)
+        sndleft = sp.load(this, R.raw.rightlegforward, 1)
+        sndback = sp.load(this, R.raw.goback, 1)
+        sndopen = sp.load(this, R.raw.open, 1)
+        sndslowclose = sp.load(this, R.raw.slowclose, 1)
+        sndkeep1s = sp.load(this, R.raw.keep1sec, 1)
+        sndtsubushite = sp.load(this, R.raw.tsubushite, 1)
+        snd10re = sp.load(this, R.raw.relax10sec, 1)
+        snddown = sp.load(this, R.raw.down, 1)
+        sndkeep20s = sp.load(this, R.raw.keep20s, 1)
+        sndpi = sp.load(this, R.raw.pi, 1)
+        sndtoesup = sp.load(this, R.raw.toesup, 1)
+        sndstandtoes = sp.load(this, R.raw.standtoes, 1)
+        snddropdown = sp.load(this, R.raw.dropdown, 1)
+        sndslowup = sp.load(this, R.raw.slowup, 1)
+        sndslowdown = sp.load(this, R.raw.slowdown, 1)
+        sndkeep5 = sp.load(this, R.raw.keep5sec, 1)
+        sndsizunde = sp.load(this, R.raw.sizunde, 1)
+        sndtaete = sp.load(this, R.raw.taete, 1)
+        sndhikitsuke = sp.load(this, R.raw.hikitsuke, 1)
+        sndslowopen = sp.load(this, R.raw.slowopen, 1)
+        sndkeepmama = sp.load(this, R.raw.keepmama, 1)
+        sndholdknee = sp.load(this, R.raw.holdknee, 1)
+        sndstretch = sp.load(this, R.raw.stretch, 1)
+        sndbend = sp.load(this, R.raw.bend, 1)
 
-
-        // v1〜v30 を自動でロードしてリストに追加
         sounds.clear()
         for (i in 1..30) {
             val resId = resources.getIdentifier("v$i", "raw", packageName)
-            if (resId != 0) {
-                sounds.add(soundPool.load(this, resId, 1))
-            }
+            if (resId != 0) sounds.add(sp.load(this, resId, 1))
         }
-        // keep1s〜keep30s を自動でロードしてリストに追加
         soundskeep.clear()
         for (i in 1..30) {
             val resId = resources.getIdentifier("keep${i}s", "raw", packageName)
-            if (resId != 0) {
-                soundskeep.add(soundPool.load(this, resId, 1))
-            }
+            if (resId != 0) soundskeep.add(sp.load(this, resId, 1))
         }
     }
 
-    /**
-     * 基本の音源（スタート、終了、アップ、足替え）と
-     * カウント音（v1, v2...）を一括でロードする
-     */
     protected fun loadCommonSounds(countResIds: List<Int>) {
-        // 1. 固定音源のロード
-        sndstr = soundPool.load(this, R.raw.start, 1)
-        sndend = soundPool.load(this, R.raw.goodjob, 1)
-        sndup = soundPool.load(this, R.raw.up, 1)
-        sndchangleg = soundPool.load(this, R.raw.changeleg, 1)
+        val sp = soundPool ?: return
+        sndstr = sp.load(this, R.raw.start, 1)
+        sndend = sp.load(this, R.raw.goodjob, 1)
+        sndup = sp.load(this, R.raw.up, 1)
+        sndchangleg = sp.load(this, R.raw.changeleg, 1)
 
-        // 2. カウント音源（v1〜v15など）をリストにロード
         sounds.clear()
         countResIds.forEach { resId ->
-            sounds.add(soundPool.load(this, resId, 1))
+            sounds.add(sp.load(this, resId, 1))
         }
     }
 
-
-
-    // --- 初期化：Intent・DB・UI・SoundPoolを一括設定 ---
-    protected fun initializeStandardSettings(explanation: String,) {
-
-
-        // Intentデータ取得
+    protected fun initializeStandardSettings(explanation: String) {
         countVolume = intent.getFloatExtra("TEXT_KEY", 1.0f)
         _workoutId = intent.getIntExtra("TEXT_KEY2", 0)
-
-        // メニュー名取得
         val menuArray = resources.getStringArray(R.array.lv_menu)
         workmenu = menuArray.getOrElse(_workoutId) { "" }
 
-
-        // UI紐付け
         setupActivityUI(workmenu, explanation)
-
-        // 目標回数取得
         loadSettingsTick()
-
-        // SoundPool初期化
-        val aa = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
-        soundPool = SoundPool.Builder().setAudioAttributes(aa).setMaxStreams(3).build()
     }
 
-
-    // YouTube画面へ遷移する共通メソッド
     protected fun openYoutube(youtubeUrl: String) {
         val intentY = Intent(this, Youtube::class.java)
         intentY.putExtra("yID", youtubeUrl)
         startActivity(intentY)
     }
 
-    // 設定変更画面へ遷移する共通メソッド
     protected fun openChangeTimes(stdText: String, maxLimit: Int, maxRepsLimit: Int) {
         val intentC = Intent(this, MainActivity2::class.java)
-        intentC.putExtra("TEXT_KEY4", workmenu) // initializeStandardSettingsで取得済みの変数
+        intentC.putExtra("TEXT_KEY4", workmenu)
         intentC.putExtra("TEXT_KEY5", _workoutId)
-
-        // 👇 ここで受け取った文章をIntentに詰める
         intentC.putExtra("STD_TEXT", stdText)
-// 👇【追加】上限の数値をIntentに詰める
         intentC.putExtra("MAX_LIMIT", maxLimit)
         intentC.putExtra("MAX_REPS_LIMIT", maxRepsLimit)
         startActivity(intentC)
     }
 
     private fun setupActivityUI(title: String, explanation: String) {
-
         tv = findViewById(R.id.tv)
         tv2 = findViewById(R.id.tv2)
         textmenu = findViewById(R.id.textmenu)
@@ -269,44 +270,30 @@ open class BaseActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    // 前の音をクリアして再生する便利メソッド
     protected fun playSoundSingle(soundId: Int) {
-        if (soundId != 0) {
-            soundPool.autoPause() // 再生中の全音を停止
-            soundPool.play(soundId, countVolume, countVolume, 1, 0, 1.0f)
-        }
+        workoutService?.playSound(soundId, countVolume)
     }
+
     open fun loadSettingsTick() {
-
         val (times, reps) = getPreferenceSettings(_workoutId)
-
         maxextimes = times
         maxReps = reps
     }
-    //プリファレンスから値を持ってくる
+
     protected fun getPreferenceSettings(workoutId: Int): Pair<Int, Int> {
-
         val pref = getSharedPreferences("WorkoutSettings", MODE_PRIVATE)
-
         val times = pref.getInt("times_$workoutId", 2)
         val reps = pref.getInt("reps_$workoutId", 15)
-
         return Pair(times, reps)
     }
 
-    // --- ボタン状態制御 ---
-    protected fun setUIForStarting(runnable: Runnable,startNum: Int,vararg otherButtons: View)
-    {
+    protected fun setUIForStarting(runnable: Runnable, startNum: Int, vararg otherButtons: View) {
         btnstart.isEnabled = false
         btnstop.isEnabled = true
         btnrerstart.isEnabled = false
         btnspeed.isEnabled = false
+        otherButtons.forEach { it.isEnabled = false }
 
-        otherButtons.forEach {
-            it.isEnabled = false
-        }
-
-        // トレーニング状態初期化
         isSaved = false
         isStart = true
         isSpeed = false
@@ -316,31 +303,26 @@ open class BaseActivity : AppCompatActivity() {
         num = startNum
         speedTime = normalspeedTime
 
-        // 音と表示
+        // フォアグラウンドサービス開始
+        workoutService?.startForegroundService(workmenu)
+
         playSoundSingle(sndstr)
         tv2.text = "始めます"
-
-        // Runnable開始
         handler.removeCallbacks(runnable)
         handler.post(runnable)
     }
 
-    protected fun restartTraining(
-        runnable: Runnable,
-        vararg otherButtons: View
-    ) {
+    protected fun restartTraining(runnable: Runnable, vararg otherButtons: View) {
         btnstart.isEnabled = false
         btnstop.isEnabled = true
         btnrerstart.isEnabled = false
         btnspeed.isEnabled = false
-        otherButtons.forEach {
-            it.isEnabled = false
-        }
+        otherButtons.forEach { it.isEnabled = false }
 
+        workoutService?.startForegroundService(workmenu)
         handler.removeCallbacks(runnable)
         handler.post(runnable)
     }
-
 
     protected fun setUIForStopping(vararg otherButtons: View) {
         btnstart.isEnabled = true
@@ -348,25 +330,17 @@ open class BaseActivity : AppCompatActivity() {
         btnrerstart.isEnabled = true
         btnspeed.isEnabled = true
         otherButtons.forEach { it.isEnabled = true }
-        soundPool.autoPause() // 停止時も音をクリア
+        
+        workoutService?.stopForegroundService()
     }
 
-    // speedモード開始
-    protected fun setUIForSpeedStarting(
-        runnable: Runnable,
-        startNum: Int,
-        vararg otherButtons: View
-    ) {
+    protected fun setUIForSpeedStarting(runnable: Runnable, startNum: Int, vararg otherButtons: View) {
         btnstart.isEnabled = false
         btnstop.isEnabled = true
         btnrerstart.isEnabled = false
         btnspeed.isEnabled = false
+        otherButtons.forEach { it.isEnabled = false }
 
-        otherButtons.forEach {
-            it.isEnabled = false
-        }
-
-        // トレーニング状態初期化
         isSaved = false
         isStart = true
         isSpeed = true
@@ -375,40 +349,37 @@ open class BaseActivity : AppCompatActivity() {
         timeCount = 0
         num = startNum
 
-        // 音と表示
+        workoutService?.startForegroundService(workmenu)
+
         playSoundSingle(sndstr)
         tv2.text = "始めます"
-        // speed専用
         speedTime = speedspeedTime
-        // Runnable開始
         handler.removeCallbacks(runnable)
         handler.post(runnable)
     }
 
     protected fun handleTrainingComplete(tvMessage: TextView, vararg otherButtons: View, onSaveComplete: () -> Unit) {
-
         btnstart.isEnabled = true
         btnstop.isEnabled = false
         btnrerstart.isEnabled = false
         otherButtons.forEach { it.isEnabled = true }
 
+        workoutService?.stopForegroundService()
+
         if (!isSaved) {
-
-            //    RecordManager.saveRecord(this, "${_workoutId}$workmenu")
             RecordManager.saveRecord(this, "%02d%s".format(_workoutId, workmenu))
-
-            // 💡【追加】LetsDoItの窓口へ、アプリキー「strech」として完了したメニュー名を送信
             SharedRecordManager.updateStats(this, "strech", workmenu)
-
-                isSaved = true
-                tvMessage.text = getString(R.string.good_job)
-                onSaveComplete()
+            isSaved = true
+            tvMessage.text = getString(R.string.good_job)
+            onSaveComplete()
         }
     }
 
-
     override fun onDestroy() {
-        if (::soundPool.isInitialized) soundPool.release()
+        if (isBound) {
+            unbindService(connection)
+            isBound = false
+        }
         super.onDestroy()
     }
 }

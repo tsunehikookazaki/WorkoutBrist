@@ -110,8 +110,7 @@ class Forwardlunge : BaseActivity() {
         speedTime = maxReps.toLong()*100
     }
     override fun onDestroy() {
-
-        soundPool.release()
+        // soundPool.release() // サービスで共有しているため、Activityでは解放しない
         super.onDestroy()
     }
 

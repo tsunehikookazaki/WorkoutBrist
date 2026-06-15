@@ -13,6 +13,11 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.SeekBar
 import android.widget.TextView
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 //private var _player: MediaPlayer? = null
 
@@ -42,7 +47,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        // Android 13以降の通知許可リクエスト
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+            }
+        }
 
         // ボタンをIDで取得
         val buttonLog = findViewById<Button>(R.id.buttonLog)

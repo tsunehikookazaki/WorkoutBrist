@@ -142,10 +142,9 @@ class HipLift : BaseActivity() {
 
     }
     override fun onDestroy() {
-
-            soundPool.release()
-            super.onDestroy()
-        }
+        // soundPool.release() // サービスで共有しているため、Activityでは解放しない
+        super.onDestroy()
+    }
 
         // 👇ここに書く（onCreateの下）
         override fun onResume() {

@@ -15,8 +15,8 @@ android {
         applicationId = "net.the_okazakis.workoutstrech"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "Pro1.0"
+        versionCode = 3
+        versionName = "Pro2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
