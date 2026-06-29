@@ -4,7 +4,8 @@ import android.os.Bundle
 
 class BirdDog :  BaseActivity() {
 
-
+    private val defaultTimes = 3  //セット数
+    private val defaultReps = 5   //セット当たり回数、某数
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
@@ -127,7 +128,7 @@ class BirdDog :  BaseActivity() {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
             openChangeTimes(StandardText, maxLimit,maxRep)
         }
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
     }
 
 
@@ -139,7 +140,7 @@ class BirdDog :  BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/${maxextimes} セット"   // ← UIも更新
     }
 }

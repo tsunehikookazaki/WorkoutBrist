@@ -3,7 +3,8 @@ package net.the_okazakis.workoutstrech
 import android.os.Bundle
 
 class AshiuranobashiNete : BaseActivity() {
-
+    private val defaultTimes = 1
+    private val defaultReps = 1
       private val runnable = object : Runnable {
         override fun run() {
             timeCount++
@@ -104,7 +105,7 @@ class AshiuranobashiNete : BaseActivity() {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
     }
     override fun onDestroy() {
         // soundPool.release() // サービスで共有しているため、Activityでは解放しない
@@ -113,7 +114,7 @@ class AshiuranobashiNete : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/${maxextimes} セット"   // ← UIも更新
     }
 }

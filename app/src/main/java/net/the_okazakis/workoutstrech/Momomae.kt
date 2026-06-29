@@ -3,6 +3,9 @@ package net.the_okazakis.workoutstrech
 import android.os.Bundle
 class Momomae : BaseActivity() {
 
+    private val defaultTimes = 1
+    private val defaultReps = 1
+
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
@@ -90,7 +93,7 @@ class Momomae : BaseActivity() {
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
 
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
 
     }
     override fun onDestroy() {
@@ -101,7 +104,7 @@ class Momomae : BaseActivity() {
     // 👇ここに書く（onCreateの下）
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/$maxextimes 回"   // ← UIも更新
     }
 }

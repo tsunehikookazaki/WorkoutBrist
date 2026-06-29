@@ -35,25 +35,34 @@ open class BaseActivity : AppCompatActivity() {
     protected var workoutService: WorkoutService? = null
     protected var isBound = false
     
-    // サブクラスとの互換性のために保持。Serviceから取得する。
-    protected lateinit var soundPool: SoundPool
+    // サービスから取得したSoundPoolを保持する
+    protected var soundPool: SoundPool? = null
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as WorkoutService.LocalBinder
             workoutService = binder.getService()
-            workoutService?.getSoundPool()?.let { soundPool = it }
+            soundPool = workoutService?.getSoundPool()
             isBound = true
             
             // 接続されたら音源をロードする
             loadAllStandardSounds()
+            
+            // サブクラスで追加の処理が必要な場合（オーバーライド用）
+            onServiceConnected()
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
             isBound = false
             workoutService = null
+            soundPool = null
         }
     }
+
+    /**
+     * サービス接続時に追加の処理を行いたい場合にサブクラスでオーバーライドする
+     */
+    open fun onServiceConnected() {}
 
     // --- 共通の変数 ---
     protected val handler = Handler(Looper.getMainLooper())
@@ -133,14 +142,6 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // SoundPoolを初期化（遅延初期化エラー回避用の暫定。Service接続後に差し替わる）
-        val aa = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-            .build()
-        soundPool = SoundPool.Builder().setAudioAttributes(aa).setMaxStreams(5).build()
-
         // サービスにバインド
         val intent = Intent(this, WorkoutService::class.java)
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
@@ -271,19 +272,21 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun playSoundSingle(soundId: Int) {
-        workoutService?.playSound(soundId, countVolume)
+        if (soundId != 0) {
+            workoutService?.playSound(soundId, countVolume)
+        }
     }
 
-    open fun loadSettingsTick() {
-        val (times, reps) = getPreferenceSettings(_workoutId)
+    open fun loadSettingsTick(defaultTimes: Int = 2, defaultReps: Int = 15) {
+        val (times, reps) = getPreferenceSettings(_workoutId, defaultTimes, defaultReps)
         maxextimes = times
         maxReps = reps
     }
 
-    protected fun getPreferenceSettings(workoutId: Int): Pair<Int, Int> {
+    protected fun getPreferenceSettings(workoutId: Int, defaultTimes: Int = 2, defaultReps: Int = 15): Pair<Int, Int> {
         val pref = getSharedPreferences("WorkoutSettings", MODE_PRIVATE)
-        val times = pref.getInt("times_$workoutId", 2)
-        val reps = pref.getInt("reps_$workoutId", 15)
+        val times = pref.getInt("times_$workoutId", defaultTimes)
+        val reps = pref.getInt("reps_$workoutId", defaultReps)
         return Pair(times, reps)
     }
 
@@ -330,7 +333,8 @@ open class BaseActivity : AppCompatActivity() {
         btnrerstart.isEnabled = true
         btnspeed.isEnabled = true
         otherButtons.forEach { it.isEnabled = true }
-        
+
+        handler.removeCallbacksAndMessages(null)
         workoutService?.stopForegroundService()
     }
 

@@ -24,12 +24,12 @@ class WorkoutService : Service() {
     override fun onCreate() {
         super.onCreate()
         val aa = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+            .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
             .build()
         soundPool = SoundPool.Builder()
             .setAudioAttributes(aa)
-            .setMaxStreams(5)
+            .setMaxStreams(10)
             .build()
         
         createNotificationChannel()
@@ -40,7 +40,7 @@ class WorkoutService : Service() {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Workout Service Channel",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_LOW,
             )
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
@@ -66,15 +66,19 @@ class WorkoutService : Service() {
 
     fun stopForegroundService() {
         stopForeground(STOP_FOREGROUND_REMOVE)
-        // stopSelf() // Don't stop self immediately, keep bound
     }
 
     fun getSoundPool(): SoundPool? = soundPool
 
     fun playSound(soundId: Int, volume: Float) {
+        android.util.Log.d("WorkoutService", "playSound called: id=$soundId, vol=$volume")
         soundPool?.let {
-            it.autoPause()
-            it.play(soundId, volume, volume, 1, 0, 1.0f)
+            val result = it.play(soundId, volume, volume, 1, 0, 1.0f)
+            if (result == 0) {
+                android.util.Log.e("WorkoutService", "playSound failed: soundId $soundId might not be loaded")
+            }
+        } ?: run {
+            android.util.Log.e("WorkoutService", "playSound failed: soundPool is null")
         }
     }
 

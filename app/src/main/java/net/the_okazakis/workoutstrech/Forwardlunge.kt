@@ -4,6 +4,8 @@ import android.os.Bundle
 
 class Forwardlunge : BaseActivity() {
 
+    private val defaultTimes = 10
+    private val defaultReps = 12
 
     private val runnable = object : Runnable {
         override fun run() {
@@ -105,7 +107,7 @@ class Forwardlunge : BaseActivity() {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         //スピードを変える
         speedTime = maxReps.toLong()*100
     }
@@ -116,7 +118,7 @@ class Forwardlunge : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         normalspeedTime = maxReps.toLong()*100
         tv.text = "1/${maxextimes} 回"   // ← UIも更新
     }

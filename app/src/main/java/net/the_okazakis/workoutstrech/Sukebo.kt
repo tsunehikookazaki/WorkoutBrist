@@ -5,6 +5,9 @@ import android.view.View
 
 class Sukebo : BaseActivity() {
 
+    private val defaultTimes = 1
+    private val defaultReps = 10
+
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
@@ -92,7 +95,7 @@ class Sukebo : BaseActivity() {
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
 
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
 
     }
     override fun onDestroy() {
@@ -103,7 +106,7 @@ class Sukebo : BaseActivity() {
     // 👇ここに書く（onCreateの下）
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/$maxextimes 回"   // ← UIも更新
     }
 }

@@ -4,6 +4,9 @@ import android.os.Bundle
 
 class Ashiage : BaseActivity() {
 
+    private val defaultTimes = 1   //セット数
+    private val defaultReps = 3   //セット当たり回数秒数　
+
     private val runnable = object : Runnable {
         override fun run() {
 
@@ -76,6 +79,7 @@ class Ashiage : BaseActivity() {
 
         btnstop.setOnClickListener {
             setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+            handler.removeCallbacks(runnable)
         }
 
         btnrerstart.setOnClickListener {
@@ -101,10 +105,11 @@ class Ashiage : BaseActivity() {
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
        loadAllStandardSounds()
+       loadSettingsTick(defaultTimes, defaultReps)
     }
         override fun onResume() {
             super.onResume()
-            loadSettingsTick()
+            loadSettingsTick(defaultTimes, defaultReps)
         }
     }
 

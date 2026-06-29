@@ -4,6 +4,9 @@ import android.os.Bundle
 
 class HipabdactionBelt : BaseActivity() {
 
+    private val defaultTimes = 3
+    private val defaultReps = 30
+
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
@@ -129,7 +132,7 @@ class HipabdactionBelt : BaseActivity() {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
     }
     override fun onDestroy() {
         // soundPool.release() // サービスで共有しているため、Activityでは解放しない
@@ -138,7 +141,7 @@ class HipabdactionBelt : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/${maxextimes} 回"   // ← UIも更新
     }
 }

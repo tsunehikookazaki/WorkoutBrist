@@ -4,6 +4,9 @@ import android.os.Bundle
 
 class Kamatasquatwide :  BaseActivity() {
 
+    private val defaultTimes = 1
+    private val defaultReps = 10
+
 
     private val runnable = object : Runnable {
         override fun run() {
@@ -14,7 +17,7 @@ class Kamatasquatwide :  BaseActivity() {
                     1 -> {
                         tv.text = "$extimes/$maxextimes 回"
                         tv2.text = "ゆっくり沈んで"
-                        soundPool.play(sndsizunde, countVolume, countVolume, 0, 0, 1.0f)
+                        playSoundSingle(sndsizunde)
                     }
 
                     in 2..4 -> {
@@ -105,7 +108,7 @@ class Kamatasquatwide :  BaseActivity() {
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
 
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
 
     }
     override fun onDestroy() {
@@ -116,7 +119,7 @@ class Kamatasquatwide :  BaseActivity() {
     // 👇ここに書く（onCreateの下）
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/$maxextimes 回"   // ← UIも更新
     }
 }

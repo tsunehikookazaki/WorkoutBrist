@@ -3,6 +3,9 @@ package net.the_okazakis.workoutstrech
 import android.os.Bundle
 class Ashijanken :BaseActivity() {
 
+    private val defaultTimes = 1
+    private val defaultReps = 16
+
 
     private val runnable = object : Runnable {
         override fun run() {
@@ -99,7 +102,7 @@ class Ashijanken :BaseActivity() {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
             openChangeTimes(StandardText, maxLimit, maxRep )
         }
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
     }
     override fun onDestroy() {
         // soundPool.release() // サービスで共有しているため、Activityでは解放しない
@@ -108,7 +111,7 @@ class Ashijanken :BaseActivity() {
 
       override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/$maxextimes 回"   // ← UIも更新
     }
 }

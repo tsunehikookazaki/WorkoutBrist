@@ -15,6 +15,9 @@ import android.widget.TextView
 
 class HipaddactionBall : BaseActivity() {
 
+    private val defaultTimes = 3
+    private val defaultReps = 50
+
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
@@ -88,7 +91,7 @@ class HipaddactionBall : BaseActivity() {
 
          val StandardText = "50回で1セット。3セット標準"
          val masxlimit = 99
-         val maxRep =30
+         val maxRep = 99 // 上限を標準より高く設定
 
          // すべての共通初期化を実行
          initializeStandardSettings(myExplanation)
@@ -128,7 +131,8 @@ class HipaddactionBall : BaseActivity() {
              // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
              openChangeTimes(StandardText, masxlimit,maxRep)
          }
-         loadSettingsTick()
+         // 初回起動時の初期値を設定
+         loadSettingsTick(defaultTimes, defaultReps)
      }
     override fun onDestroy() {
         // soundPool.release() // サービスで共有しているため、Activityでは解放しない
@@ -137,7 +141,7 @@ class HipaddactionBall : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/${maxextimes} 回"   // ← UIも更新
     }
 }

@@ -4,6 +4,9 @@ import android.os.Bundle
 
 class Hukkin :  BaseActivity() {
 
+    private val defaultTimes = 3
+    private val defaultReps = 1
+
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
@@ -122,7 +125,7 @@ class Hukkin :  BaseActivity() {
             openChangeTimes(StandardText, masxlimit,maxRep)
         }
 
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
 
     }
     override fun onDestroy() {
@@ -133,7 +136,7 @@ class Hukkin :  BaseActivity() {
     // 👇ここに書く（onCreateの下）
     override fun onResume() {
         super.onResume()
-        loadSettingsTick()
+        loadSettingsTick(defaultTimes, defaultReps)
         tv.text = "1/$maxextimes セット"   // ← UIも更新
     }
 }
