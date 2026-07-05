@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "net.the_okazakis.workoutstrech"
+    namespace = "net.the_okazakis.workoutbrisk"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -12,11 +12,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "net.the_okazakis.workoutstrech"
+        applicationId = "net.the_okazakis.workoutbrisk"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "Pro2.2"
+        versionCode = 1
+        versionName = "Wb1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.appcompat)
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

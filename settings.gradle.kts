@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WorkoutStrechPro22"
+rootProject.name = "WorkoutBrist1"
 include(":app")

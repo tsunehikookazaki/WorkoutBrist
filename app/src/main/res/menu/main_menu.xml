@@ -2,6 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_howto"
+        android:title="使い方"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_record"
+        android:title="早歩き詳細記録"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_open_image"
+        android:title="テンポ（歩数）の目安"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/menu_stop_app"
         android:title="アプリの完全停止"
         app:showAsAction="never" />
