@@ -74,48 +74,53 @@ class MainActivity : AppCompatActivity() {
 
         var volume0 = "100%"  //ボリューム初期値
         var prog0: Int //ボリュームの6段階の値　0~5
-        textView.text = "音楽を聞きながらワークアウトする時\nに、ワークアウトのボリュームを調整\n" +
-                "volume $volume0"  //ボリュームの値を表示
+        textView.text = getString(R.string.main_volume_format, volume0)  //ボリュームの値を表示
 
 
         // イベントリスナーの追加　　シークバーの値を変える
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        seekBar.setOnSeekBarChangeListener(
+            object : SeekBar.OnSeekBarChangeListener {
 
-            // 値が変更された時に呼ばれる
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                prog0 = progress  //変更されたらボリューム値を変える
-                when (prog0) {
-                    5 -> {
-                        countVolume = 1.0f;volume0 = "100%"
+                // 値が変更された時に呼ばれる
+                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                    prog0 = progress  //変更されたらボリューム値を変える
+                    when (prog0) {
+                        5 -> {
+                            countVolume = 1.0f;volume0 = "100%"
+                        }
+
+                        4 -> {
+                            countVolume = 0.8f;volume0 = "80%"
+                        }
+
+                        3 -> {
+                            countVolume = 0.6f;volume0 = "60%"
+                        }
+
+                        2 -> {
+                            countVolume = 0.40f;volume0 = "40%"
+                        }
+
+                        1 -> {
+                            countVolume = 0.10f; volume0 = "10%"
+                        }
+
+                        0 -> {
+                            countVolume = 0.05f;volume0 = "5%"
+                        }
                     }
-                    4 -> {
-                        countVolume = 0.8f;volume0 = "80%"
-                    }
-                    3 -> {
-                        countVolume = 0.6f;volume0 = "60%"
-                    }
-                    2 -> {
-                        countVolume = 0.40f;volume0 = "40%"
-                    }
-                    1 -> {
-                        countVolume = 0.10f;volume0 = "10"
-                    }
-                    0 -> {
-                        countVolume = 0.05f;volume0 = "5%"
-                    }
+                    textView.text = getString(R.string.main_volume_format, volume0)  //ボリュームの値を表示
                 }
-                textView.text = "音楽を聞きながらワークアウトする時\nに、ワークアウトのボリュームを調整\n" +
-                        "volume $volume0"  //ボリュームの値を表示
-            }
 
-            // つまみがタッチされた時に呼ばれる
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
+                // つまみがタッチされた時に呼ばれる
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                }
 
-            // つまみが離された時に呼ばれる
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
+                // つまみが離された時に呼ばれる
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                }
+            },
+        )
 
 
         val lvMenu = findViewById<ListView>(R.id.lvMenu)   // ListViewオブジェクトを取得。
@@ -137,10 +142,9 @@ class MainActivity : AppCompatActivity() {
             RecordManager.cleanUpOldRecords(this)
 
             // 今日のセット数を計算
-            val records = RecordManager.getRecords(this)
-            val todayStr = java.text.SimpleDateFormat("yyyy.MM.dd", java.util.Locale.JAPAN).format(java.util.Date())
-            val todaySets = records.values.sumOf { it.lines().filter { l -> l.startsWith(todayStr) }.size }
-
+            RecordManager.getRecords(this)
+            // val todayStr = java.text.SimpleDateFormat("yyyy.MM.dd", java.util.Locale.JAPAN).format(java.util.Date())
+            // val todaySets = records.values.sumOf { it.lines().filter { l -> l.startsWith(todayStr) }.size }
         }
     }
 

@@ -1,16 +1,8 @@
 package net.the_okazakis.workoutbrisk
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.media.AudioAttributes
-import android.media.SoundPool
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.TextView
+
 
 
 class HipaddactionBall : BaseActivity() {
@@ -21,46 +13,46 @@ class HipaddactionBall : BaseActivity() {
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 num++
-                tv.text = "${extimes}/$maxextimes セット"
+                tv.text = getString(R.string.tv_sets_format, exTimes, maxExTimes)
                 when (num) {
                     -5 -> {
                         if (!isStart) {
-                            tv2.text = "ちょっと休憩"
+                            tv2.text = getString(R.string.msg_rest_brief)
                             playSoundSingle(sndbreak)
                         }
                     }
 
                     -4 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                         }
                     }
 
                     in -3..-1 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sounds[num * (-1) - 1])
                         }
                     }
 
                     0 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sndpi)
                         }
                     }
 
                     in 1..50 -> {
-                        tv2.text = getString(R.string.tubu) + "  $num/50 回 "
+                        tv2.text = getString(R.string.progress_action_50_format, getString(R.string.tubu), num)
                         playSoundSingle(sndtsubushite)
                     }
 
                     51 -> {
                         isStart = false
                         num = -6
-                        extimes++
+                        exTimes++
                     }
 
 
@@ -70,7 +62,7 @@ class HipaddactionBall : BaseActivity() {
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -89,8 +81,8 @@ class HipaddactionBall : BaseActivity() {
                     "これをリズミカルに繰り返す。\n\n50回で1セット　3セット標準" +
                     "\n\nボールは100均一で"
 
-         val StandardText = "50回で1セット。3セット標準"
-         val masxlimit = 99
+         val standardText = "50回で1セット。3セット標準"
+         val maxLimit = 99
          val maxRep = 99 // 上限を標準より高く設定
 
          // すべての共通初期化を実行
@@ -99,29 +91,29 @@ class HipaddactionBall : BaseActivity() {
          loadAllStandardSounds()
 
          // 各種クリックリスナー
-         btnstart.setOnClickListener {
-             setUIForStarting(runnable,-1,btnback, btnChangeTimes, btnyoutube)
+         btnStart.setOnClickListener {
+             setUIForStarting(runnable, -1, btnBack, btnChangeTimes, btnYoutube)
          }
 
 
-         btnstop.setOnClickListener {
-             setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+         btnStop.setOnClickListener {
+             setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
              handler.removeCallbacks(runnable)
          }
 
-         btnrerstart.setOnClickListener {
-             restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+         btnRestart.setOnClickListener {
+             restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
          }
 
-         btnspeed.setOnClickListener {
-             setUIForSpeedStarting(runnable, -1, btnback,btnyoutube, btnChangeTimes)
+         btnSpeed.setOnClickListener {
+             setUIForSpeedStarting(runnable, -1, btnBack, btnYoutube, btnChangeTimes)
          }
 
-         btnback.setOnClickListener {
+         btnBack.setOnClickListener {
              finish()
          }
          //Youtubeのリンクを開く
-         btnyoutube.setOnClickListener {
+         btnYoutube.setOnClickListener {
              // 固有のURLを渡すだけ
              openYoutube("https://youtu.be/n7Munc_C_Xo?t=3")
          }
@@ -129,7 +121,7 @@ class HipaddactionBall : BaseActivity() {
 
          btnChangeTimes.setOnClickListener {
              // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-             openChangeTimes(StandardText, masxlimit,maxRep)
+             openChangeTimes(standardText, maxLimit, maxRep)
          }
          // 初回起動時の初期値を設定
          loadSettingsTick(defaultTimes, defaultReps)
@@ -142,6 +134,6 @@ class HipaddactionBall : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/${maxextimes} 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

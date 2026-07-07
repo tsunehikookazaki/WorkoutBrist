@@ -2,9 +2,9 @@ package net.the_okazakis.workoutbrisk
 
 
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 
 
 
@@ -16,7 +16,7 @@ class Youtube : AppCompatActivity() {
         val videoUrl = intent.getStringExtra("yID") ?: "https://www.youtube.com/watch?v=デフォルトのID"
 
 // 2. 受け取ったURLで「ブラウザ」を指定して起動
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
+        val intent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
 
         // 【重要】ブラウザで開くように強制するフラグ
         // これによりYouTubeアプリが立ち上がらず、小窓（PiP）も発生しなくなります
@@ -25,9 +25,9 @@ class Youtube : AppCompatActivity() {
 
         try {
             startActivity(intent)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // 万が一、ブラウザが見つからない場合のフォールバック
-            val backupIntent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
+            val backupIntent = Intent(Intent.ACTION_VIEW, videoUrl.toUri())
             startActivity(backupIntent)
         }
 

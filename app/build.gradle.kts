@@ -5,18 +5,14 @@ plugins {
 
 android {
     namespace = "net.the_okazakis.workoutbrisk"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "net.the_okazakis.workoutbrisk"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "Wb1"
+        versionCode = 2
+        versionName = "Wb12"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

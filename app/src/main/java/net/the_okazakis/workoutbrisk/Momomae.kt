@@ -11,13 +11,13 @@ class Momomae : BaseActivity() {
             timeCount++
 
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "${extimes}/$maxextimes セット"
+                        tv.text = getString(R.string.tv_sets_format, exTimes, maxExTimes)
                     }
                     2 ->{
-                        tv2.text = "足をお尻に引き付け前ももを伸ばす"
+                        tv2.text = getString(R.string.msg_pull_heels)
                         playSoundSingle(sndhikitsuke)
                     }
                     3 -> {
@@ -25,18 +25,18 @@ class Momomae : BaseActivity() {
                         playSoundSingle(sndkeep30s)
                     }
                     in 4..33 -> {
-                        tv2.text = "${num - 3}"
+                        tv2.text = getString(R.string.unit_seconds_format, num - 3)
                         playSoundSingle(sounds[num - 4])
                     }
 
-                    34 ->{ extimes++}
+                    34 ->{ exTimes++}
 
                 }
                 // ← これ追加
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -53,9 +53,9 @@ class Momomae : BaseActivity() {
             "前モモ伸ばしし\n片方の足を後ろに引き、足を持ってかかとをおしりに引き付ける。前モモが伸びているのを感じる。30秒間キープ。反対の足も同様に。1回（左右1回ずつ）で1セット。1セット標準。" +
                     "足が持てない場合はタオルなどを使って引き付ける。モモを後ろに引くとより効果的。　足が横に出ないように、前に出ないように、腰が反らないように注意する。"
 
-        val StandardText ="左右1回づつで1セット。1セット標準。"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText ="左右1回づつで1セット。1セット標準。"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -63,34 +63,34 @@ class Momomae : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -3, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             openYoutube("https://youtu.be/sRvbL3eflz0")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
 
         loadSettingsTick(defaultTimes, defaultReps)
@@ -105,6 +105,6 @@ class Momomae : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

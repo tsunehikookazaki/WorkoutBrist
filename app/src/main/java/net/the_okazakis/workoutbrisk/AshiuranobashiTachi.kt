@@ -10,10 +10,10 @@ class AshiuranobashiTachi : BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "${extimes}/$maxextimes セット"//表示用回数 extimesは0から
+                        tv.text = getString(R.string.tv_sets_format, exTimes, maxExTimes)
                         tv2.text = getString(R.string.taoshite)
                         playSoundSingle(sndtaoshite)
                     }
@@ -24,20 +24,20 @@ class AshiuranobashiTachi : BaseActivity() {
                     }
                     in 4..33 ->{
 
-                        if (count) {tv2.text = "${num - 3} 秒"}
-                        else {tv2.text = "${num - 3} 秒"}
+                        tv2.text = getString(R.string.tv_seconds_format, num - 3)
 
                         playSoundSingle(sounds[num-4])
                     }
                     34 -> {
-                        if(count){   //false →true 足が2回変わったら
-                            extimes++   //回数を増やす
-                            count =false    //
+                        if (count) {   //false →true 足が2回変わったら
+                            exTimes++   //回数を増やす
+                            count = false    //
+                        } else {
+                            count = true
                         }
-                        else{count =true}
-                        if(extimes  <= maxextimes  ){
-                            tv2.text = "足を変えて"
-                            playSoundSingle(sndchangleg)
+                        if (exTimes <= maxExTimes) {
+                            tv2.text = getString(R.string.msg_change_leg_simple)
+                            playSoundSingle(sndChangeLeg)
                             num = -1
                         }
                     }
@@ -46,7 +46,7 @@ class AshiuranobashiTachi : BaseActivity() {
                 // ← これ追加
                 handler.postDelayed(this, 1000)
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -64,9 +64,9 @@ class AshiuranobashiTachi : BaseActivity() {
         val myExplanation ="片方の脚をベット椅子などに載せ延ばす。つま先は上向きにし。骨盤で身体を前に倒し、" +
                 "30秒キープ \n片足交互1回で1セット １セット標準"
 
-        val StandardText = "片足交互1回で1セット １セット標準\n運動回数　1回標準　最大99回"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText = "片足交互1回で1セット １セット標準\n運動回数　1回標準　最大99回"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -74,35 +74,35 @@ class AshiuranobashiTachi : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -3, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
         //Youtubeのリンクを開く
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/8d647I5J4wY?t=14")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
         loadSettingsTick(defaultTimes, defaultReps)
     }
@@ -114,6 +114,6 @@ class AshiuranobashiTachi : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/${maxextimes} セット"   // ← UIも更新
+        updateHeaderUI()
     }
 }

@@ -1,10 +1,8 @@
 package net.the_okazakis.workoutbrisk
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Bundle
 import android.os.Handler
@@ -23,13 +21,13 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var tv2: TextView
     protected lateinit var textmenu: TextView
     protected lateinit var tvexpla: TextView
-    protected lateinit var btnback: Button
-    protected lateinit var btnstart: Button
-    protected lateinit var btnstop: Button
-    protected lateinit var btnrerstart: Button
+    protected lateinit var btnBack: Button
+    protected lateinit var btnStart: Button
+    protected lateinit var btnStop: Button
+    protected lateinit var btnRestart: Button
     protected lateinit var btnChangeTimes: Button
-    protected lateinit var btnspeed: Button
-    protected lateinit var btnyoutube: ImageButton
+    protected lateinit var btnSpeed: Button
+    protected lateinit var btnYoutube: ImageButton
 
     // --- サービス関連 ---
     protected var workoutService: WorkoutService? = null
@@ -66,26 +64,23 @@ open class BaseActivity : AppCompatActivity() {
 
     // --- 共通の変数 ---
     protected val handler = Handler(Looper.getMainLooper())
-    protected var _workoutId = 0
+    protected var workoutId = 0
     protected var timeCount = 0
     protected var workmenu: String = ""
     protected var countVolume: Float = 1.0f
-    protected var maxextimes = 2
+    protected var maxExTimes = 2
     protected var maxReps = 5
-    protected var extimes = 0
+    protected var exTimes = 0
     protected var num = 0
     protected var nn = 0
     protected var speedTime = 1000L
-    protected var softspeedTime = 1200L
     protected var normalspeedTime = 1000L
     protected var speedspeedTime = 700L
     protected var isSpeed = false
     protected var count = false
     protected var isSaved = false
     protected var isUp = true
-    protected var isFirsttime = true
     protected var choki = true
-    protected var isFirstleg = false
     protected var isStart = true
 
     // --- 共通のサウンドID ---
@@ -93,7 +88,7 @@ open class BaseActivity : AppCompatActivity() {
     protected var sndend = 0
     protected var sndup = 0
     protected var snddown = 0
-    protected var sndchangleg = 0
+    protected var sndChangeLeg = 0
     protected var sndstand = 0
     protected var sndsit = 0
     protected var sndgo = 0
@@ -115,27 +110,27 @@ open class BaseActivity : AppCompatActivity() {
     protected var sndright = 0
     protected var sndleft = 0
     protected var sndback = 0
+    protected var sndopen = 0
+    protected var sndSlowClose = 0
     protected var sndkeep1s = 0
     protected var sndtsubushite = 0
     protected var snd10re = 0
     protected var sndkeep20s = 0
     protected var sndpi = 0
-    protected var sndtoesup = 0
-    protected var sndstandtoes = 0
-    protected var snddropdown = 0
-    protected var sndslowup = 0
-    protected var sndslowdown = 0
+    protected var sndToesUp = 0
+    protected var sndStandToes = 0
+    protected var sndDropDown = 0
+    protected var sndSlowUp = 0
+    protected var sndSlowDown = 0
     protected var sndkeep5 = 0
     protected var sndsizunde = 0
     protected var sndtaete = 0
     protected var sndhikitsuke = 0
-    protected var sndslowopen = 0
-    protected var sndslowclose = 0
+    protected var sndSlowOpen = 0
     protected var sndkeepmama = 0
-    protected var sndopen = 0
-    protected var sndholdknee = 0
-    protected var sndstretch = 0
-    protected var sndbend = 0
+    protected var sndHoldKnee = 0
+    protected var sndStretch = 0
+    protected var sndBend = 0
     
     protected val sounds: MutableList<Int> = mutableListOf()
     protected val soundskeep: MutableList<Int> = mutableListOf()
@@ -144,7 +139,7 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // サービスにバインド
         val intent = Intent(this, WorkoutService::class.java)
-        bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        bindService(intent, connection, BIND_AUTO_CREATE)
     }
 
     protected fun loadAllStandardSounds() {
@@ -153,7 +148,7 @@ open class BaseActivity : AppCompatActivity() {
         sndstr = sp.load(this, R.raw.start, 1)
         sndend = sp.load(this, R.raw.goodjob, 1)
         sndup = sp.load(this, R.raw.up, 1)
-        sndchangleg = sp.load(this, R.raw.changeleg, 1)
+        sndChangeLeg = sp.load(this, R.raw.changeleg, 1)
         sndstand = sp.load(this, R.raw.slowstand, 1)
         sndsit = sp.load(this, R.raw.sitslow, 1)
         sndgo = sp.load(this, R.raw.gu, 1)
@@ -176,58 +171,54 @@ open class BaseActivity : AppCompatActivity() {
         sndleft = sp.load(this, R.raw.rightlegforward, 1)
         sndback = sp.load(this, R.raw.goback, 1)
         sndopen = sp.load(this, R.raw.open, 1)
-        sndslowclose = sp.load(this, R.raw.slowclose, 1)
+        sndSlowClose = sp.load(this, R.raw.slowclose, 1)
         sndkeep1s = sp.load(this, R.raw.keep1sec, 1)
         sndtsubushite = sp.load(this, R.raw.tsubushite, 1)
         snd10re = sp.load(this, R.raw.relax10sec, 1)
         snddown = sp.load(this, R.raw.down, 1)
         sndkeep20s = sp.load(this, R.raw.keep20s, 1)
         sndpi = sp.load(this, R.raw.pi, 1)
-        sndtoesup = sp.load(this, R.raw.toesup, 1)
-        sndstandtoes = sp.load(this, R.raw.standtoes, 1)
-        snddropdown = sp.load(this, R.raw.dropdown, 1)
-        sndslowup = sp.load(this, R.raw.slowup, 1)
-        sndslowdown = sp.load(this, R.raw.slowdown, 1)
+        sndToesUp = sp.load(this, R.raw.toesup, 1)
+        sndStandToes = sp.load(this, R.raw.standtoes, 1)
+        sndDropDown = sp.load(this, R.raw.dropdown, 1)
+        sndSlowUp = sp.load(this, R.raw.slowup, 1)
+        sndSlowDown = sp.load(this, R.raw.slowdown, 1)
         sndkeep5 = sp.load(this, R.raw.keep5sec, 1)
         sndsizunde = sp.load(this, R.raw.sizunde, 1)
         sndtaete = sp.load(this, R.raw.taete, 1)
         sndhikitsuke = sp.load(this, R.raw.hikitsuke, 1)
-        sndslowopen = sp.load(this, R.raw.slowopen, 1)
+        sndSlowOpen = sp.load(this, R.raw.slowopen, 1)
         sndkeepmama = sp.load(this, R.raw.keepmama, 1)
-        sndholdknee = sp.load(this, R.raw.holdknee, 1)
-        sndstretch = sp.load(this, R.raw.stretch, 1)
-        sndbend = sp.load(this, R.raw.bend, 1)
+        sndHoldKnee = sp.load(this, R.raw.holdknee, 1)
+        sndStretch = sp.load(this, R.raw.stretch, 1)
+        sndBend = sp.load(this, R.raw.bend, 1)
 
         sounds.clear()
-        for (i in 1..30) {
-            val resId = resources.getIdentifier("v$i", "raw", packageName)
-            if (resId != 0) sounds.add(sp.load(this, resId, 1))
-        }
-        soundskeep.clear()
-        for (i in 1..30) {
-            val resId = resources.getIdentifier("keep${i}s", "raw", packageName)
-            if (resId != 0) soundskeep.add(sp.load(this, resId, 1))
-        }
-    }
-
-    protected fun loadCommonSounds(countResIds: List<Int>) {
-        val sp = soundPool ?: return
-        sndstr = sp.load(this, R.raw.start, 1)
-        sndend = sp.load(this, R.raw.goodjob, 1)
-        sndup = sp.load(this, R.raw.up, 1)
-        sndchangleg = sp.load(this, R.raw.changeleg, 1)
-
-        sounds.clear()
-        countResIds.forEach { resId ->
+        val vResIds = intArrayOf(
+            R.raw.v1, R.raw.v2, R.raw.v3, R.raw.v4, R.raw.v5, R.raw.v6, R.raw.v7, R.raw.v8, R.raw.v9, R.raw.v10,
+            R.raw.v11, R.raw.v12, R.raw.v13, R.raw.v14, R.raw.v15, R.raw.v16, R.raw.v17, R.raw.v18, R.raw.v19, R.raw.v20,
+            R.raw.v21, R.raw.v22, R.raw.v23, R.raw.v24, R.raw.v25, R.raw.v26, R.raw.v27, R.raw.v28, R.raw.v29, R.raw.v30
+        )
+        for (resId in vResIds) {
             sounds.add(sp.load(this, resId, 1))
         }
+
+        soundskeep.clear()
+        val keepResIds = intArrayOf(
+            R.raw.keep1s, R.raw.keep2s, R.raw.keep3s, R.raw.keep4s, R.raw.keep5s,
+            R.raw.keep6s, R.raw.keep7s, R.raw.keep8s, R.raw.keep9s, R.raw.keep10s,
+        )
+        for (resId in keepResIds) {
+            soundskeep.add(sp.load(this, resId, 1))
+        }
     }
+
 
     protected fun initializeStandardSettings(explanation: String, dTimes: Int = 2, dReps: Int = 15) {
         countVolume = intent.getFloatExtra("TEXT_KEY", 1.0f)
-        _workoutId = intent.getIntExtra("TEXT_KEY2", 0)
+        workoutId = intent.getIntExtra("TEXT_KEY2", 0)
         val menuArray = resources.getStringArray(R.array.lv_menu)
-        workmenu = menuArray.getOrElse(_workoutId) { "" }
+        workmenu = menuArray.getOrElse(workoutId) { "" }
 
         setupActivityUI(workmenu, explanation)
         loadSettingsTick(dTimes, dReps)
@@ -243,12 +234,12 @@ open class BaseActivity : AppCompatActivity() {
     protected fun openChangeTimes(stdText: String, maxLimit: Int, maxRepsLimit: Int) {
         val intentC = Intent(this, MainActivity2::class.java)
         intentC.putExtra("TEXT_KEY4", workmenu)
-        intentC.putExtra("TEXT_KEY5", _workoutId)
+        intentC.putExtra("TEXT_KEY5", workoutId)
         intentC.putExtra("STD_TEXT", stdText)
         intentC.putExtra("MAX_LIMIT", maxLimit)
         intentC.putExtra("MAX_REPS_LIMIT", maxRepsLimit)
         // 👇 追加：現在のコード上の初期値を送る
-        intentC.putExtra("DEFAULT_TIMES", maxextimes)
+        intentC.putExtra("DEFAULT_TIMES", maxExTimes)
         intentC.putExtra("DEFAULT_REPS", maxReps)
         startActivity(intentC)
     }
@@ -258,18 +249,18 @@ open class BaseActivity : AppCompatActivity() {
         tv2 = findViewById(R.id.tv2)
         textmenu = findViewById(R.id.textmenu)
         tvexpla = findViewById(R.id.tvexpla)
-        btnback = findViewById(R.id.btnback)
-        btnstart = findViewById(R.id.btStart)
-        btnstop = findViewById(R.id.btStop)
-        btnrerstart = findViewById(R.id.btnrestart)
-        btnyoutube = findViewById(R.id.youtube)
+        btnBack = findViewById(R.id.btnback)
+        btnStart = findViewById(R.id.btStart)
+        btnStop = findViewById(R.id.btStop)
+        btnRestart = findViewById(R.id.btnrestart)
+        btnYoutube = findViewById(R.id.youtube)
         btnChangeTimes = findViewById(R.id.button2)
-        btnspeed = findViewById(R.id.btspeed)
+        btnSpeed = findViewById(R.id.btspeed)
 
         textmenu.text = title
         tvexpla.text = explanation
-        btnstop.isEnabled = false
-        btnrerstart.isEnabled = false
+        btnStop.isEnabled = false
+        btnRestart.isEnabled = false
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         supportActionBar?.hide()
@@ -277,8 +268,12 @@ open class BaseActivity : AppCompatActivity() {
 
     protected fun updateHeaderUI() {
         if (::tv.isInitialized) {
-            val unit = if (workmenu.contains("伸ばし") || workmenu.contains("キープ") || workmenu.contains("腓腹筋") || workmenu.contains("セット") || workmenu.contains("潰し")) "セット" else "回"
-            tv.text = "1/$maxextimes $unit"
+            val unit = if (workmenu.contains("伸ばし") || workmenu.contains("キープ") || workmenu.contains("腓腹筋") || workmenu.contains("セット") || workmenu.contains("潰し")) {
+                getString(R.string.unit_sets)
+            } else {
+                getString(R.string.unit_times)
+            }
+            tv.text = getString(R.string.header_progress_format, maxExTimes, unit)
         }
     }
 
@@ -291,47 +286,43 @@ open class BaseActivity : AppCompatActivity() {
     open fun loadSettingsTick(dTimes: Int = 2, dReps: Int = 15) {
         val pref = getSharedPreferences("WorkoutSettings", MODE_PRIVATE)
         // SharedPreferencesに値がない場合のみ、コード上の初期値(dTimes)を使う
-        maxextimes = pref.getInt("times_$_workoutId", dTimes)
-        maxReps = pref.getInt("reps_$_workoutId", dReps)
-    }
-
-    protected fun getPreferenceSettings(workoutId: Int, defaultTimes: Int = 2, defaultReps: Int = 15): Pair<Int, Int> {
-        val pref = getSharedPreferences("WorkoutSettings", MODE_PRIVATE)
-        val times = pref.getInt("times_$workoutId", defaultTimes)
-        val reps = pref.getInt("reps_$workoutId", defaultReps)
-        return Pair(times, reps)
+        maxExTimes = pref.getInt("times_$workoutId", dTimes)
+        maxReps = pref.getInt("reps_$workoutId", dReps)
     }
 
     protected fun setUIForStarting(runnable: Runnable, startNum: Int, vararg otherButtons: View) {
-        btnstart.isEnabled = false
-        btnstop.isEnabled = true
-        btnrerstart.isEnabled = false
-        btnspeed.isEnabled = false
+        btnStart.isEnabled = false
+        btnStop.isEnabled = true
+        btnRestart.isEnabled = false
+        btnSpeed.isEnabled = false
         otherButtons.forEach { it.isEnabled = false }
 
         isSaved = false
         isStart = true
         isSpeed = false
-        extimes = 1
+        exTimes = 1
         nn = 0
         timeCount = 0
         num = startNum
         speedTime = normalspeedTime
 
-        // フォアグラウンドサービス開始
         workoutService?.startForegroundService(workmenu)
 
-        playSoundSingle(sndstr)
-        tv2.text = "始めます"
+        tv2.text = getString(R.string.msg_starting)
         handler.removeCallbacks(runnable)
-        handler.post(runnable)
+        
+        // 💡 最初の「始めます」が途切れないよう、わずかに（500ms）遅らせて再生・開始する
+        handler.postDelayed({
+            playSoundSingle(sndstr)
+            handler.post(runnable)
+        }, 500)
     }
 
     protected fun restartTraining(runnable: Runnable, vararg otherButtons: View) {
-        btnstart.isEnabled = false
-        btnstop.isEnabled = true
-        btnrerstart.isEnabled = false
-        btnspeed.isEnabled = false
+        btnStart.isEnabled = false
+        btnStop.isEnabled = true
+        btnRestart.isEnabled = false
+        btnSpeed.isEnabled = false
         otherButtons.forEach { it.isEnabled = false }
 
         workoutService?.startForegroundService(workmenu)
@@ -340,10 +331,10 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun setUIForStopping(vararg otherButtons: View) {
-        btnstart.isEnabled = true
-        btnstop.isEnabled = false
-        btnrerstart.isEnabled = true
-        btnspeed.isEnabled = true
+        btnStart.isEnabled = true
+        btnStop.isEnabled = false
+        btnRestart.isEnabled = true
+        btnSpeed.isEnabled = true
         otherButtons.forEach { it.isEnabled = true }
 
         handler.removeCallbacksAndMessages(null)
@@ -351,39 +342,43 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun setUIForSpeedStarting(runnable: Runnable, startNum: Int, vararg otherButtons: View) {
-        btnstart.isEnabled = false
-        btnstop.isEnabled = true
-        btnrerstart.isEnabled = false
-        btnspeed.isEnabled = false
+        btnStart.isEnabled = false
+        btnStop.isEnabled = true
+        btnRestart.isEnabled = false
+        btnSpeed.isEnabled = false
         otherButtons.forEach { it.isEnabled = false }
 
         isSaved = false
         isStart = true
         isSpeed = true
-        extimes = 1
+        exTimes = 1
         nn = 0
         timeCount = 0
         num = startNum
 
         workoutService?.startForegroundService(workmenu)
 
-        playSoundSingle(sndstr)
-        tv2.text = "始めます"
+        tv2.text = getString(R.string.msg_starting)
         speedTime = speedspeedTime
         handler.removeCallbacks(runnable)
-        handler.post(runnable)
+        
+        // 💡 最初の「始めます」が途切れないよう、わずかに（500ms）遅らせて再生・開始する
+        handler.postDelayed({
+            playSoundSingle(sndstr)
+            handler.post(runnable)
+        }, 500)
     }
 
     protected fun handleTrainingComplete(tvMessage: TextView, vararg otherButtons: View, onSaveComplete: () -> Unit) {
-        btnstart.isEnabled = true
-        btnstop.isEnabled = false
-        btnrerstart.isEnabled = false
+        btnStart.isEnabled = true
+        btnStop.isEnabled = false
+        btnRestart.isEnabled = false
         otherButtons.forEach { it.isEnabled = true }
 
         workoutService?.stopForegroundService()
 
         if (!isSaved) {
-            RecordManager.saveRecord(this, "%02d%s".format(_workoutId, workmenu))
+            RecordManager.saveRecord(this, "%02d%s".format(workoutId, workmenu))
             SharedRecordManager.updateStats(this, "strech", workmenu)
             isSaved = true
             tvMessage.text = getString(R.string.good_job)

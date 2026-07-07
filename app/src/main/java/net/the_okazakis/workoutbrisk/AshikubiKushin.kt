@@ -11,25 +11,25 @@ class AshikubiKushin : BaseActivity() {
 
             timeCount++
             num++
-            if (extimes < maxextimes) {
+            if (exTimes < maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "${extimes + 1}/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes + 1, maxExTimes)
                         tv2.text = getString(R.string.foot_bent)
-                        playSoundSingle(sndbent)
+                        playSoundSingle(sndBend)
                     }
 
                     2 -> {
                         tv2.text = getString(R.string.foot_stre)
-                        playSoundSingle(sndstre)
-                        num = 0; extimes++
+                        playSoundSingle(sndStretch)
+                        num = 0; exTimes++
                     }
                 }
                 // ← これ追加
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -46,45 +46,45 @@ class AshikubiKushin : BaseActivity() {
         val myExplanation = "膝を伸ばして座るか、床に寝る。足首をゆっくり手前に曲げ、次に向こう側に伸ばす。\n" +
                 "ふくらはぎ、足の甲が伸びているのを感じる。\n\n15回標準。"
 
-        val StandardText = "15回標準　最大99回"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText = "15回標準　最大99回"
+        val maxLimit = 99
+        val maxRep = 30
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
         // 音声をロード
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -3, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/IxC41pWD2Iw")
         }
 
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
         loadSettingsTick(defaultTimes, defaultReps)
     }
@@ -96,6 +96,6 @@ class AshikubiKushin : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

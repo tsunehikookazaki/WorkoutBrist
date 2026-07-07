@@ -26,9 +26,9 @@ class LogActivity : AppCompatActivity() {
         // すべて削除ボタン → 確認ダイアログ
         btnClear.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("確認")
-                .setMessage("すべての記録を削除してもよろしいですか？")
-                .setPositiveButton("はい") { _, _ ->
+                .setTitle(R.string.dialog_confirm_title)
+                .setMessage(R.string.dialog_confirm_clear_msg)
+                .setPositiveButton(R.string.dialog_yes) { _, _ ->
                     // アプリ内のローカル記録を削除
                     RecordManager.clearRecords(this)
 
@@ -39,7 +39,7 @@ class LogActivity : AppCompatActivity() {
                     tableLayout.removeAllViews()
                     showWeeklyTable(tableLayout)
                 }
-                .setNegativeButton("キャンセル", null)
+                .setNegativeButton(R.string.dialog_no, null)
                 .show()
         }
         // 【ここに追加】古い記録の整理と削除を実行
@@ -62,7 +62,7 @@ class LogActivity : AppCompatActivity() {
         val sdfFull = java.text.SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
         val sdfShort = java.text.SimpleDateFormat("M/d", Locale.getDefault())
 
-        for (i in 0 until 7) {
+        repeat(7) {
             val d = calendar.time
             dateList.add(sdfFull.format(d))
             dateDisplayList.add(sdfShort.format(d))
@@ -77,7 +77,7 @@ class LogActivity : AppCompatActivity() {
 
 
         // 「種目」列（可変幅にするため0を指定）
-        headerRow.addView(createTextView("種目", true, 0))
+        headerRow.addView(createTextView(getString(R.string.label_activity_name), isHeader = true, widthDp = 0))
         // 各日付の列
         dateDisplayList.forEach { headerRow.addView(createTextView(it, true, 45)) }
         tableLayout.addView(headerRow)
@@ -96,10 +96,9 @@ class LogActivity : AppCompatActivity() {
                 val d = if (line.length >= 10) line.take(10) else ""
                 dateCounts[d] = dateCounts.getOrDefault(d, 0) + 1
             }
-// 修正対象: dateList.forEach { date -> のループ内
             dateList.forEach { date ->
                 val count = dateCounts[date] ?: 0
-                val text = if (count > 0) "${count}" else "-"
+                val text = if (count > 0) count.toString() else getString(R.string.label_no_record)
                 row.addView(createTextView(text, false, 45))
             }
 
@@ -110,7 +109,7 @@ class LogActivity : AppCompatActivity() {
     private fun createTextView(text: String, isHeader: Boolean, widthDp: Int): TextView {
         return TextView(this).apply {
             this.text = text
-            this.gravity = if (isHeader || (widthDp > 0 && widthDp < 100)) Gravity.CENTER else Gravity.CENTER_VERTICAL
+            this.gravity = if (isHeader || (widthDp in 1..99)) Gravity.CENTER else Gravity.CENTER_VERTICAL
             this.setPadding(12, 8, 12, 8)
             this.textSize = 10f
             if (widthDp > 0) {

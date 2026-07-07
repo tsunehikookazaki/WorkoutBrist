@@ -10,23 +10,20 @@ class Ball : BaseActivity() {
             timeCount++
 
             num++
-            if (extimes <= maxextimes) {
-                tv.text = "$extimes/$maxextimes 回"//表示用回数 extimesは0から
+            if (exTimes <= maxExTimes) {
+                tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                 when(num) {
-                    0->{tv2.text = "つぶして"
+                    0->{tv2.text = getString(R.string.tubu)
                         playSoundSingle(sndtsubu)
                     }
-                    in 0..10-> {
-                        if(num in 1..10) {
-                            playSoundSingle(sounds[num - 1])
-                        }
-
-                        tv2.text = "$num 秒"
+                    in 1..10-> {
+                        playSoundSingle(sounds[num - 1])
+                        tv2.text = getString(R.string.unit_seconds_format, num)
                     }
                     11 -> {
                         playSoundSingle(sndloosen)
-                        extimes++   //回数を増やす
-                        tv2.text = "ゆるめて"
+                        exTimes++   //回数を増やす
+                        tv2.text = getString(R.string.yuru)
                         num = -1
                     }
                     else ->{}
@@ -35,7 +32,7 @@ class Ball : BaseActivity() {
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -52,45 +49,45 @@ class Ball : BaseActivity() {
         val myExplanation =
             "膝裏ボール潰し\n椅子に座り、膝の裏に小さめのボール(または丸めたタオル)を挟み、ぎゅーっと10秒間押しつぶす。10秒3回で1セット。1セット標準。"
 
-        val StandardText = "10秒3回で1セット。1セット標準。\n運動回数　1回標準　最大99回"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText = "10秒3回で1セット。1セット標準。\n運動回数　1回標準　最大99回"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
         // 音声をロード
         loadAllStandardSounds()
 
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -3, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
         //Youtubeのリンクを開く
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/MVzREF4j1lI?t=4")
         }
 
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
     }
     override fun onDestroy() {

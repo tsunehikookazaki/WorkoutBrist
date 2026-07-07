@@ -11,48 +11,48 @@ class HipabdactionBelt : BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     -5 -> {
                         if (!isStart) {
-                            tv2.text = "ちょっと休憩"
+                            tv2.text = getString(R.string.msg_rest_brief)
                             playSoundSingle(sndbreak)
                         }
                     }
 
                     -4 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                         }
                     }
 
                     in -3..-1 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sounds[num * (-1) - 1])
                         }
                     }
 
                     0 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sndpi)
                         }
                     }
 
                     in 1..90 -> {    //%3
                         if ((num % 3) == 1) {
-                            tv.text = "$extimes /$maxextimes セット"
-                            tv2.text = getString(R.string.open) + " $nn/30"
+                            tv.text = getString(R.string.tv_sets_format, exTimes, maxExTimes)
+                            tv2.text = getString(R.string.progress_action_30_format, getString(R.string.open), nn)
                             playSoundSingle(sndopen)
                         }
                         if ((num % 3) == 2) {
-                            tv2.text = getString(R.string.keep1s) + " $nn/30"
+                            tv2.text = getString(R.string.progress_action_30_format, getString(R.string.keep1s), nn)
                             playSoundSingle(sndkeep1s)
                         }
                         if ((num % 3) == 0) {
-                            tv2.text = getString(R.string.slow_close) + " $nn/30"
-                            playSoundSingle(sndslowclose)
+                            tv2.text = getString(R.string.progress_action_30_format, getString(R.string.slow_close), nn)
+                            playSoundSingle(sndSlowClose)
 
                             nn++
                         }
@@ -62,7 +62,7 @@ class HipabdactionBelt : BaseActivity() {
                         isStart = false
                         num = -6 // num++があるので　-5にするには -6
                         nn = 1
-                        extimes++
+                        exTimes++
                     }
                 }
                 // ← これ追加
@@ -70,7 +70,7 @@ class HipabdactionBelt : BaseActivity() {
 
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -90,9 +90,9 @@ class HipabdactionBelt : BaseActivity() {
                     "\nこれを繰り返す。\n\n30回で1セット　3セット標準" +
                     "\n\nベルトは100均一で"
 
-        val StandardText = "30回で1セット。3セット標準"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText = "30回で1セット。3セット標準"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -100,29 +100,29 @@ class HipabdactionBelt : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-1,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -1, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -1, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -1, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
         //Youtubeのリンクを開く
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/xZGLV-_eOEA")
         }
@@ -130,7 +130,7 @@ class HipabdactionBelt : BaseActivity() {
 
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
         loadSettingsTick(defaultTimes, defaultReps)
     }
@@ -142,6 +142,6 @@ class HipabdactionBelt : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/${maxextimes} 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

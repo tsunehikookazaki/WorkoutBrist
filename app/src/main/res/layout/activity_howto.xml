@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".HowToActivity">
+    tools:context=".HowToActivity"
+    tools:targetApi="35"
+    tools:theme="@style/Theme.WorkoutStrech">
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -14,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:titleTextColor="@android:color/white"
-        android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
-        android:title="使い方" />
+        app:titleTextColor="@android:color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/ttsukaikata" />
 
     <!-- スクロール可能なエリア -->
     <ScrollView
@@ -40,9 +43,9 @@
                 android:layout_gravity="center_horizontal"
                 android:maxWidth="700dp"
                 android:gravity="start"
-                android:text="ここに使い方の説明を表示します。\n\n内容が長くなってもスクロールして読めます。"
+                android:text="@string/sestumei"
                 android:textSize="14sp"
-                android:textColor="@android:color/black" />
+                android:textColor="?android:attr/textColorPrimary" />
 
         </LinearLayout>
     </ScrollView>

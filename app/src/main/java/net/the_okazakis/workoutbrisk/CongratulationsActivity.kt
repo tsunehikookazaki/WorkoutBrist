@@ -4,9 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Bundle
-import android.view.ViewTreeObserver
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import android.view.WindowManager
@@ -39,7 +37,7 @@ class CongratulationsActivity : AppCompatActivity() {
         // val ivConfetti = findViewById<ImageView>(R.id.ivConfetti)
 
         // メッセージを設定
-        tvCongratulations.text = "早歩き${count}回達成おめでとうございます！\n素晴らしい！"
+        tvCongratulations.text = getString(R.string.msg_congrats_format, count)
 
         // --- 🎶 音声設定 ---
 

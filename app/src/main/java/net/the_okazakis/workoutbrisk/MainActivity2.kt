@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.content.edit
 
 /**
  * 選択された各種目の目標セット数や反復回数（reps）を設定・保存するための設定画面Activity。
@@ -17,7 +18,7 @@ class MainActivity2 : AppCompatActivity() {
     /**
      * 選択されたトレーニングの主キーIDを表すプロパティ。
      */
-    private var _workoutId = -1
+    private var workoutId = -1
 
 
     /**
@@ -50,14 +51,14 @@ class MainActivity2 : AppCompatActivity() {
         tvWorkoutName.text = workmenu
 
         val dbid: Int = intent.getIntExtra("TEXT_KEY5", 0)
-        _workoutId = dbid
+        workoutId = dbid
 
         // 👇【ここから追記】送られてきた「標準の文章」を取得して表示する
-        val stdText = intent.getStringExtra("STD_TEXT") ?: "設定されていません"
+        val stdText = intent.getStringExtra("STD_TEXT") ?: getString(R.string.msg_not_set)
         val tvStandardLabel = findViewById<TextView>(R.id.tvStandardLabel)
 
         // 画面に「【標準】 左右10秒ずつ 3回（1セット）」のように表示
-        tvStandardLabel.text = "$stdText"
+        tvStandardLabel.text = stdText
 
         // 👇【追加】送られてきた制限値（上限）とデフォルト値を取得する
         val maxLimit = intent.getIntExtra("MAX_LIMIT", 99)
@@ -67,8 +68,8 @@ class MainActivity2 : AppCompatActivity() {
 
         // --- ③ データベースから初期値を読み込んでEditTextにセット ---
         // 修正：固定値「2」や「15」ではなく、Activityから渡された初期値を使う
-        var times0 = pref.getInt("times_$_workoutId", defaultTimesFromActivity).toString()
-        var reps0 = pref.getInt("reps_$_workoutId", defaultRepsFromActivity).toString()
+        var times0 = pref.getInt("times_$workoutId", defaultTimesFromActivity).toString()
+        var reps0 = pref.getInt("reps_$workoutId", defaultRepsFromActivity).toString()
 
         val timesInt = times0.toIntOrNull() ?: 0
         if (timesInt > maxLimit) {
@@ -88,7 +89,7 @@ class MainActivity2 : AppCompatActivity() {
         // --- ④ 特定の種目（ID 12以外）でRepsエリアを非表示にする動的制御 ---
         val dynamicIds = listOf(12,18)
 
-        if (!dynamicIds.contains(_workoutId)) {
+        if (!dynamicIds.contains(workoutId)) {
             // Repsのテキストと入力欄を非表示
             etReps.visibility = View.GONE
             tvRepsLabel.visibility = View.GONE
@@ -114,10 +115,10 @@ class MainActivity2 : AppCompatActivity() {
             var reps = etReps.text.toString()
             if (reps == "") { reps = "15" }
 
-            pref.edit()
-                .putInt("times_$_workoutId", times.toInt())
-                .putInt("reps_$_workoutId", reps.toInt())
-                .apply()
+            pref.edit {
+                putInt("times_$workoutId", times.toInt())
+                putInt("reps_$workoutId", reps.toInt())
+            }
 
             btnSave.isEnabled = false
             finish()

@@ -10,10 +10,10 @@ class BirdDog :  BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {  //上げて
-                        tv.text = "$extimes/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                         if (isStart) {  //初めてなら　上げて
                             tv2.text =  getString(R.string.up)
                             playSoundSingle(sndup)
@@ -25,11 +25,11 @@ class BirdDog :  BaseActivity() {
                         }
                     }
                     2 -> {     //n秒キープ
-                        tv2.text = "$maxReps 秒キープ"
-                        playSoundSingle(soundskeep[maxReps-1])
+                        tv2.text = getString(R.string.unit_seconds_keep_format, maxReps)
+                        playSoundSingle(soundskeep[maxReps - 1])
                     }
-                    in 3..maxReps+2 -> {   // 1,2,3,4
-                        tv2.text = "${num -2}"
+                    in 3..maxReps + 2 -> {   // 1,2,3,4
+                        tv2.text = getString(R.string.unit_seconds_format, num - 2)
                         playSoundSingle(sounds[num - 3])
                     }
                     maxReps + 3 -> {   //戻して
@@ -43,18 +43,18 @@ class BirdDog :  BaseActivity() {
                     }
 
                     maxReps + 5 -> {      //n秒キープ
-                        tv2.text = "$maxReps 秒キープ"
-                        playSoundSingle(soundskeep[maxReps-1])
+                        tv2.text = getString(R.string.unit_seconds_keep_format, maxReps)
+                        playSoundSingle(soundskeep[maxReps - 1])
                     }
-                    in maxReps + 6..maxReps+maxReps + 5 -> {   //1,2,3
-                        tv2.text ="${num - maxReps -5}"
-                        playSoundSingle(sounds[num - maxReps -6])
+                    in maxReps + 6..maxReps + maxReps + 5 -> {   //1,2,3
+                        tv2.text = getString(R.string.unit_seconds_format, num - maxReps - 5)
+                        playSoundSingle(sounds[num - maxReps - 6])
                     }
                     maxReps+maxReps + 6  -> {   //戻して
                         tv2.text = getString(R.string.modo)
                         playSoundSingle(sndmodo)
                         num = 0
-                        extimes ++
+                        exTimes ++
                     }
 
                     else -> {}
@@ -63,7 +63,7 @@ class BirdDog :  BaseActivity() {
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -87,7 +87,7 @@ class BirdDog :  BaseActivity() {
                     "\n\n左右5回ずつが1セット。1セット標準" +
                     "\n膝を付かずに水平に伸ばすのが普通のバードドックですが、運動の強度が高いので、膝をついて行います。力がついたら足を水平に上げます\n"
 
-        val StandardText = "1セットの秒数は3秒（最大30秒）、左右5回（運動回数５）ずつが標準\n運動回数　最大99回　１セットの秒数　最大30秒"
+        val standardText = "1セットの秒数は3秒（最大30秒）、左右5回（運動回数５）ずつが標準\n運動回数　最大99回　１セットの秒数　最大30秒"
         val maxLimit = 99 // 👈【追加】上限値を決める
         val maxRep = 30 // 👈【追加】もう一つの値（秒数など）の上限
         // すべての共通初期化を実行
@@ -96,29 +96,29 @@ class BirdDog :  BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -3, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
         //Youtubeのリンクを開く
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/7laXS5K4KcU")
         }
@@ -126,7 +126,7 @@ class BirdDog :  BaseActivity() {
 
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, maxLimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
         loadSettingsTick(defaultTimes, defaultReps)
     }
@@ -141,6 +141,6 @@ class BirdDog :  BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/${maxextimes} セット"   // ← UIも更新
+        updateHeaderUI()
     }
 }

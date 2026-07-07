@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5">
@@ -11,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="Workout &amp; Brisk"
+        android:text="@string/launcher_title"
         android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="#333333"
@@ -27,33 +26,36 @@
         android:padding="32dp"
         app:layout_constraintTop_toBottomOf="@+id/launcherTitle">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGoBrisk"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginBottom="24dp"
             android:backgroundTint="#BAF4366C"
-            android:text="インターバル早歩き\n(Brisk Walk)"
+            android:text="@string/btn_brisk_walk"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:cornerRadius="16dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGoWorkout"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginBottom="24dp"
             android:backgroundTint="#03A9F4"
-            android:text="ワークアウト・ストレッチ\n(Workout Menu)"
+            android:text="@string/btn_workout_stretch"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:cornerRadius="16dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGoLog"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="#8BC34A"
-            android:text="全体の実行記録"
-            android:textSize="16sp" />
+            android:text="@string/btn_all_records"
+            android:textSize="16sp"
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 

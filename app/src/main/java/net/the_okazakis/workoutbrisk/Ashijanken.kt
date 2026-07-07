@@ -12,10 +12,10 @@ class Ashijanken :BaseActivity() {
 
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "${extimes}/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                         tv2.text = getString(R.string.goo)
                         playSoundSingle(sndgo)
                     }
@@ -35,14 +35,14 @@ class Ashijanken :BaseActivity() {
                     3 -> {
                         tv2.text = getString(R.string.pa)
                         playSoundSingle(sndpa)
-                        num = 0; extimes++
+                        num = 0; exTimes++
                     }
                 }
                 // ← これ追加
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -61,7 +61,7 @@ class Ashijanken :BaseActivity() {
                      " グーのこぶしが出るように" +
                 "\n\nグー　チョキ　パーを16回標準"
 
-        val StandardText = "グー）チョキ　パー、グー（裏）チョキ　パーを各8回　16回標準\n最大99"
+        val standardText = "グー）チョキ　パー、グー（裏）チョキ　パーを各8回　16回標準\n最大99"
         val maxLimit = 99
         val maxRep =30
         // すべての共通初期化を実行
@@ -70,37 +70,37 @@ class Ashijanken :BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -3, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/p6agyQN2gco?t=102")
         }
 
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, maxLimit, maxRep )
+            openChangeTimes(standardText, maxLimit, maxRep )
         }
         loadSettingsTick(defaultTimes, defaultReps)
     }
@@ -109,9 +109,9 @@ class Ashijanken :BaseActivity() {
         super.onDestroy()
     }
 
-      override fun onResume() {
+    override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

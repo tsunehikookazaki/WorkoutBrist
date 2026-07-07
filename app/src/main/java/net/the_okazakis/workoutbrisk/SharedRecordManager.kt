@@ -2,6 +2,7 @@ package net.the_okazakis.workoutbrisk
 
 import android.content.Context
 import android.os.Environment
+import androidx.core.net.toUri
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -11,7 +12,7 @@ object SharedRecordManager {
     private const val FOLDER_NAME = "LetsDoIt"
     private const val FILE_NAME = "stats.json"
     private const val AUTHORITY = "net.the_okazakis.letsdoit.stats"
-    private val CONTENT_URI = android.net.Uri.parse("content://$AUTHORITY/stats")
+    private val CONTENT_URI = "content://$AUTHORITY/stats".toUri()
 
     fun updateStats(context: Context, appKey: String, value: String) {
         // 1. LetsDoItの窓口（ContentProvider）へ送信
@@ -21,8 +22,8 @@ object SharedRecordManager {
                 put("value", value)
             }
             context.contentResolver.insert(CONTENT_URI, values)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
+            // エラー時は何もしない
         }
 
         // 2. 念のためこれまでのファイル保存も継続（バックアップ用）
@@ -34,7 +35,7 @@ object SharedRecordManager {
             val json = if (file.exists()) {
                 try {
                     JSONObject(file.readText())
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     JSONObject()
                 }
             } else {
@@ -48,8 +49,8 @@ object SharedRecordManager {
 
             json.put(today, dayData)
             file.writeText(json.toString())
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
+            // エラー時は何もしない
         }
     }
 
@@ -66,8 +67,8 @@ object SharedRecordManager {
                 put("value", "未実施") // LetsDoIt側で「未実施」として判定される文字列を送る
             }
             context.contentResolver.insert(CONTENT_URI, values)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
+            // エラー時は何もしない
         }
 
         // ************* 2. これまでのファイル保存からも項目を削除（バックアップ用） *************
@@ -84,8 +85,8 @@ object SharedRecordManager {
                 }
                 file.writeText(json.toString())
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
+            // エラー時は何もしない
         }
     }
 }

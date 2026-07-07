@@ -12,31 +12,31 @@ class Hizakakae : BaseActivity() {
             timeCount++
 
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "${extimes}/$maxextimes セット"
+                        tv.text = getString(R.string.tv_sets_format, exTimes, maxExTimes)
                         tv2.text = getString(R.string.hizakakae)
-                        playSoundSingle(sndholdknee)
+                        playSoundSingle(sndHoldKnee)
                     }
                     3 -> { tv2.text = getString(R.string.keep20s)
                         playSoundSingle(sndkeep20s)
                     }
 
                     in 5 ..24->{
-                        tv2.text = "${num - 4} 秒"
+                        tv2.text = getString(R.string.tv_seconds_format, num - 4)
                         playSoundSingle(sounds[num-5])
                     }
                     25 -> {
                         if (count) {   //false →true 足が2回変わったら
-                            extimes++   //回数を増やす
+                            exTimes++   //回数を増やす
                             count = false    //
                         } else {
                             count = true
                         }
-                        if (extimes <= maxextimes) {
-                            tv2.text = "足を変えて"
-                            playSoundSingle(sndchangleg)
+                        if (exTimes <= maxExTimes) {
+                            tv2.text = getString(R.string.msg_change_leg_simple)
+                            playSoundSingle(sndChangeLeg)
                             num = 0
                         }
                     }
@@ -46,7 +46,7 @@ class Hizakakae : BaseActivity() {
                 handler.postDelayed(this, speedTime)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -63,9 +63,9 @@ class Hizakakae : BaseActivity() {
         val myExplanation =
             "膝抱え（腰のストレッチ）\n仰向けに寝て、片方の膝を両手で抱え込み、ゆっくり胸の方に引き寄せ20秒キープ。腰が伸びているのを感じる。反対の足も同様に。左右1回ずつで1セット。3セット標準。"
 
-        val StandardText ="左右1回ずつで1セット。\n3セット（回）標準。　最大99回"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText ="左右1回ずつで1セット。\n3セット（回）標準。　最大99回"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -73,36 +73,36 @@ class Hizakakae : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             openYoutube("https://youtu.be/xzK58pHkbME?t=66")
         }
 
 
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
 
         loadSettingsTick(defaultTimes, defaultReps)
@@ -111,7 +111,7 @@ class Hizakakae : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes セット"   // ← UIも更新
+        updateHeaderUI()
     }
 }
 

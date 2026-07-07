@@ -11,26 +11,26 @@ class Legraise : BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
 
-                tv.text = "$extimes/$maxextimes セット"
+                tv.text = getString(R.string.tv_sets_format, exTimes, maxExTimes)
 
                 when (num) {
                     in -10..-4 ->{
                         if(!isStart){
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                         }
                     }
                     in -3..-1 ->{
 
                         if(!isStart){
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sounds[num*(-1)-1])
                         }
                     }
                     0 ->{
                         if(!isStart){
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sndpi)
                         }
                     }
@@ -39,11 +39,11 @@ class Legraise : BaseActivity() {
 
                         if(isUp) {
                             nn++
-                            tv2.text = getString(R.string.up) + "  $nn/10"
+                            tv2.text = getString(R.string.progress_action_10_format, getString(R.string.up), nn)
                             playSoundSingle(sndup)
                             isUp = false
                         }else{
-                            tv2.text = getString(R.string.down)+ "  $nn/10"
+                            tv2.text = getString(R.string.progress_action_10_format, getString(R.string.down), nn)
                             playSoundSingle(snddown)
                             isUp = true
 
@@ -54,8 +54,8 @@ class Legraise : BaseActivity() {
                         if (nn >=10) {
                             num = -(11) // 10s relax
                             nn=0
-                            extimes++
-                            if(extimes <= maxextimes) {
+                            exTimes++
+                            if(exTimes <= maxExTimes) {
                                 tv2.text = getString(R.string.relax10)
                                 playSoundSingle(snd10re)
                                 isStart = false
@@ -68,7 +68,7 @@ class Legraise : BaseActivity() {
                 // ← これ追加
                 handler.postDelayed(this, 1000)
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -85,9 +85,9 @@ class Legraise : BaseActivity() {
             "仰向けに寝て、手は身体の横に置く\n足はなるべく伸ばす（きつい場合は曲げてもよい.）\n足をそろえてゆっくり上げて(出来れば90度位に)ゆっくりおろす\n" +
                     "下したとき足は床に付けない。\n\n10回で1セット、3セットが標準"
 
-        val StandardText ="10回で1セット。\n3セット（回）標準。"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText ="10回で1セット。\n3セット（回）標準。"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -95,34 +95,34 @@ class Legraise : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             openYoutube("https://youtu.be/JmG5MLaDS38")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
 
         loadSettingsTick(defaultTimes, defaultReps)
@@ -137,6 +137,6 @@ class Legraise : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

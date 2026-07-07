@@ -12,10 +12,10 @@ class Forwardlunge : BaseActivity() {
             timeCount++
 
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "$extimes/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
 
                         tv2.text = getString(R.string.goleft)
                         playSoundSingle(sndright)
@@ -33,7 +33,7 @@ class Forwardlunge : BaseActivity() {
                     4 ->{
                         tv2.text = getString(R.string.goback)
                         playSoundSingle(sndback)
-                        extimes ++
+                        exTimes ++
                         num = 0
                     }
 
@@ -43,7 +43,7 @@ class Forwardlunge : BaseActivity() {
                 handler.postDelayed(this, speedTime)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -66,9 +66,9 @@ class Forwardlunge : BaseActivity() {
                     "1セットの回(秒)数が10で標準スピード　12でやや遅く　20が半分のスピード"
 
 
-        val StandardText = "10回で1セット。1セット標準\n1セットの回(秒)数が10で標準スピード　12でやや遅く　20が半分のスピード"
-        val masxlimit = 99
-        val maxRep =21
+        val standardText = "10回で1セット。1セット標準\n1セットの回(秒)数が10で標準スピード　12でやや遅く　20が半分のスピード"
+        val maxLimit = 99
+        val maxRep = 21
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -77,35 +77,35 @@ class Forwardlunge : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -2, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -2, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
         //Youtubeのリンクを開く
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/yVOKHhqiXlw?t=515")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
         loadSettingsTick(defaultTimes, defaultReps)
         //スピードを変える
@@ -120,6 +120,6 @@ class Forwardlunge : BaseActivity() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
         normalspeedTime = maxReps.toLong()*100
-        tv.text = "1/${maxextimes} 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

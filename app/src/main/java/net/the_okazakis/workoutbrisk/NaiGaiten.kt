@@ -10,19 +10,19 @@ class NaiGaiten : BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {  //続ける条件　　maxextimeまで
+            if (exTimes <= maxExTimes) {  //続ける条件　　maxExTimesまで
 
                 when (num) {
 
                     2 -> {
-                        tv.text = "${extimes}/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                         tv2.text = getString(R.string.slow_open)
-                        playSoundSingle(sndslowopen)
+                        playSoundSingle(sndSlowOpen)
                     }
                     5 -> {
                         tv2.text = getString(R.string.slow_close)
-                        playSoundSingle(sndslowclose)
-                        extimes ++ ;num = 0
+                        playSoundSingle(sndSlowClose)
+                        exTimes ++ ;num = 0
                     }
                     else -> {}
                 }
@@ -30,7 +30,7 @@ class NaiGaiten : BaseActivity() {
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -48,8 +48,8 @@ class NaiGaiten : BaseActivity() {
                     "\n両足を外に倒し足を広げる。広げた時に少し手で押さえ、力を加え足を開く。" +
                     "\n\n10回が1セット。1セットが標準"
 
-        val StandardText ="10回で1セット、1セット（回）標準　　最大99回"
-        val masxlimit = 99
+        val standardText ="10回で1セット、1セット（回）標準　　最大99回"
+        val maxLimit = 99
         val maxRep =30
 
         // すべての共通初期化を実行
@@ -58,34 +58,34 @@ class NaiGaiten : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             openYoutube("https://youtu.be/kM_M8TeN1qY?t=155")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit,maxRep)
         }
 
         loadSettingsTick(defaultTimes, defaultReps)
@@ -100,6 +100,6 @@ class NaiGaiten : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

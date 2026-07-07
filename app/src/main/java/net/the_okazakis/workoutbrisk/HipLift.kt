@@ -13,52 +13,52 @@ class HipLift : BaseActivity() {
             timeCount++
             num++
 
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
 
-                tv.text = "${extimes}/$maxextimes セット"
+                tv.text = getString(R.string.tv_sets_format, exTimes, maxExTimes)
 
                 when (num) {
 
                     -10 -> {
                         if (!isStart) {
                             speedTime = normalspeedTime
-                            tv2.text = "10秒リラックス"
+                            tv2.text = getString(R.string.relax10)
                             playSoundSingle(snd10re)
                         }
                     }
                     -3 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sounds[2])
                         }
                     }
                     -2 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sounds[1])
                         }
                     }
                     -1 -> {
                         if (!isStart) {
-                            tv2.text = "${num * (-1)}"
+                            tv2.text = getString(R.string.unit_seconds_format, num * (-1))
                             playSoundSingle(sounds[0])
                         }
                     }
                     0 -> {
                         if (!isStart) {
-                            tv2.text = "0"
+                            tv2.text = getString(R.string.unit_seconds_format, 0)
                             playSoundSingle(sndpi)
                             if (isSpeed)speedTime = speedspeedTime
                         }
                     }
 
                     1 -> {
-                        tv2.text = getString(R.string.up) + " ${nn + 1}回"
+                        tv2.text = getString(R.string.progress_action_simple_format, getString(R.string.up), nn + 1)
                         playSoundSingle(sndup)
                     }
                     2 -> {
 
-                        tv2.text = getString(R.string.down) + " ${nn + 1}回"
+                        tv2.text = getString(R.string.progress_action_simple_format, getString(R.string.down), nn + 1)
                         playSoundSingle(snddown)
                         if (nn < 9) {
                             num = 0
@@ -67,14 +67,14 @@ class HipLift : BaseActivity() {
                             isStart = false
                             nn = 0
                             num = -11
-                            extimes++
+                            exTimes++
                         }
                     }
                 }
                 handler.postDelayed(this, speedTime)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -87,8 +87,8 @@ class HipLift : BaseActivity() {
 
         setContentView(R.layout.activity_sub)
 
-        btnspeed = findViewById(R.id.btspeed)
-        btnspeed.visibility = View.VISIBLE
+        btnSpeed = findViewById(R.id.btspeed)
+        btnSpeed.visibility = View.VISIBLE
 
         val myExplanation =
             "床に寝て、膝を曲げる。足はべた足。お尻に力を入れ足を踏ん張るように腰を上げ下げする。\nおしりを下げた時床に着けない。" +
@@ -99,9 +99,9 @@ class HipLift : BaseActivity() {
                     "\nSPEEDボタンでスピードアップ"+
                     "\n\n左右それぞれ10回が1セット。合計２セットが標準　　片足を上げた場合はそれぞれ１セットずつ、合計２セット\n\n"
 
-        val StandardText = "10回が1セット。左右それぞれ1セット合計２セット（回）が標準\n片足を上げた場合はそれぞれ１セットずつ、合計２セット(回)が標準\n最大99回\nSPEEDボタンでも同じ"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText = "10回が1セット。左右それぞれ1セット合計２セット（回）が標準\n片足を上げた場合はそれぞれ１セットずつ, 合計２セット(回)が標準\n最大99回\nSPEEDボタンでも同じ"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -109,36 +109,36 @@ class HipLift : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-3,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -3, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             openYoutube("https://youtu.be/trf2Ph_WWPQ")
         }
 
 
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
 
        loadSettingsTick(defaultTimes, defaultReps)
@@ -149,11 +149,10 @@ class HipLift : BaseActivity() {
         super.onDestroy()
     }
 
-        // 👇ここに書く（onCreateの下）
-        override fun onResume() {
-            super.onResume()
-            loadSettingsTick(defaultTimes, defaultReps)
-            tv.text = "1/$maxextimes 回"   // ← UIも更新
-        }
+    override fun onResume() {
+        super.onResume()
+        loadSettingsTick(defaultTimes, defaultReps)
+        updateHeaderUI()
+    }
     }
 

@@ -11,29 +11,29 @@ class Kamatakakato : BaseActivity() {
             timeCount++
 
             num++
-            if (extimes <= maxextimes) {  //続ける条件　　maxextimeまで
+            if (exTimes <= maxExTimes) {  //続ける条件　　maxExTimesまで
                 when (num) {
                     1 -> {
-                        tv.text = "$extimes/$maxextimes 回"
-                        tv2.text = "つま先を上げて"
-                        playSoundSingle(sndtoesup)
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
+                        tv2.text = getString(R.string.msg_toes_up)
+                        playSoundSingle(sndToesUp)
                     }
 
                     3 -> {
-                        tv2.text = "つま先立ちをして"
-                        playSoundSingle(sndstandtoes)
+                        tv2.text = getString(R.string.msg_toes_stand)
+                        playSoundSingle(sndStandToes)
 
                     }
                     4 -> {
-                        tv2.text = "さらに伸びをして"
+                        tv2.text = getString(R.string.msg_stretch_further)
                     }
 
                     5 -> {
-                        tv2.text = "かかとを落とす"
-                        playSoundSingle(snddropdown)
+                        tv2.text = getString(R.string.msg_drop_heels)
+                        playSoundSingle(sndDropDown)
                     }
                     6 ->{
-                        num = 0; extimes++
+                        num = 0; exTimes++
                     }
                     else -> {}
                 }
@@ -41,7 +41,7 @@ class Kamatakakato : BaseActivity() {
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -57,8 +57,8 @@ class Kamatakakato : BaseActivity() {
         val myExplanation =
             "鎌田式 かかと落とし\n背筋を伸ばし、両足を肩幅に広げ、ゆっくりつま先立ちになる。ゆっくりかかとを落として、すとんと衝撃を与える。膝を痛めないように少しだけ曲げる。10回で1セット。1セット標準。目指せ1日3セット"
 
-        val StandardText ="10回で1セット。1セット標準。"
-        val masxlimit = 99
+        val standardText ="10回で1セット。1セット標準。"
+        val maxLimit = 99
         val maxRep =30
 
         // すべての共通初期化を実行
@@ -67,34 +67,34 @@ class Kamatakakato : BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             openYoutube("https://youtu.be/gEdSC2LGc10?t=36")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
 
         loadSettingsTick(defaultTimes, defaultReps)
@@ -109,6 +109,6 @@ class Kamatakakato : BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

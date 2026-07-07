@@ -12,10 +12,10 @@ class KamatasquatTable :  BaseActivity() {
             timeCount++
 
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "$extimes/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                         tv2.text = getString(R.string.down)
                         playSoundSingle(snddown)
                     }
@@ -29,14 +29,14 @@ class KamatasquatTable :  BaseActivity() {
                        playSoundSingle(sndup)
                     }
                     9 -> {
-                        num = 0; extimes++
+                        num = 0; exTimes++
                     }
                 }
                 // ← これ追加
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -56,8 +56,8 @@ class KamatasquatTable :  BaseActivity() {
                 "\n膝がつま先より出ないように。背中が曲がらないように。" +
                 "呼吸を止めない\n\n10回で1セット。1セット標準　目指せ1日3セット！"
 
-          val StandardText ="10回で1セット。1セット標準。"
-          val masxlimit = 99
+          val standardText ="10回で1セット。1セット標準。"
+          val maxLimit = 99
           val maxRep =30
 
           // すべての共通初期化を実行
@@ -66,34 +66,34 @@ class KamatasquatTable :  BaseActivity() {
           loadAllStandardSounds()
 
           // 各種クリックリスナー
-          btnstart.setOnClickListener {
-              setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+          btnStart.setOnClickListener {
+              setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
           }
 
 
-          btnstop.setOnClickListener {
-              setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+          btnStop.setOnClickListener {
+              setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
               handler.removeCallbacks(runnable)
           }
 
-          btnrerstart.setOnClickListener {
-              restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+          btnRestart.setOnClickListener {
+              restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
           }
 
-          btnspeed.setOnClickListener {
-              setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+          btnSpeed.setOnClickListener {
+              setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
           }
 
-          btnback.setOnClickListener {
+          btnBack.setOnClickListener {
               finish()
           }
 
-          btnyoutube.setOnClickListener {
+          btnYoutube.setOnClickListener {
               openYoutube("https://youtu.be/e9SqQ71tSX4?t=38")
           }
           btnChangeTimes.setOnClickListener {
               // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-              openChangeTimes(StandardText, masxlimit,maxRep)
+              openChangeTimes(standardText, maxLimit, maxRep)
           }
 
           loadSettingsTick(defaultTimes, defaultReps)
@@ -108,6 +108,6 @@ class KamatasquatTable :  BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }

@@ -1,7 +1,6 @@
 package net.the_okazakis.workoutbrisk
 
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.SoundPool

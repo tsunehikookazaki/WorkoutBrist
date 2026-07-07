@@ -13,8 +13,8 @@ class Ashiage : BaseActivity() {
             timeCount++
 
             num++
-            if (extimes <= maxextimes) {
-                tv.text = "$extimes/$maxextimes 回"
+            if (exTimes <= maxExTimes) {
+                tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                 when (num) {
                     1 -> {
                         tv2.text = getString(R.string.up)
@@ -22,28 +22,28 @@ class Ashiage : BaseActivity() {
                     }
 
                     in 2..11 -> {
-                        tv2.text = "${num - 1} 秒"
+                        tv2.text = getString(R.string.tv_seconds_format, num - 1)
                         val soundId = sounds.getOrNull(num - 2) ?: 0
                         playSoundSingle(soundId)
 
                     }
 
                     12 -> {
-                        if (count) {
-                            extimes++; count = false
+                        count = if (count) {
+                            exTimes++; false
                         } else {
-                            count = true
+                            true
                         }
-                        if (extimes <= maxextimes) {
-                            tv2.text = "足を変えて上げて"
-                            playSoundSingle(sndchangleg)
+                        if (exTimes <= maxExTimes) {
+                            tv2.text = getString(R.string.msg_change_leg)
+                            playSoundSingle(sndChangeLeg)
                             num = 0
                         }
                     }
                 }
                 handler.postDelayed(this, 1000)
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -60,49 +60,49 @@ class Ashiage : BaseActivity() {
                     "つま先が10cm以上になるよう、足(モモ)を上げる。\n膝を曲げないで、踵から上げる気持ちで。" +
                     "\n\n左右10秒ずつ３回が１セット。1セットが標準"
 
-        val StandardText = "左右10秒ずつ 3回（1セット）"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText = "左右10秒ずつ 3回（1セット）"
+        val maxLimit = 99
+        val maxRep = 30
         // すべての共通初期化を実行（初期値を渡す）
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
 
 
-        btnstart.setOnClickListener {
+        btnStart.setOnClickListener {
             setUIForStarting(
                 runnable,
                 -3,
-                btnback,
+                btnBack,
                 btnChangeTimes,
-                btnyoutube
+                btnYoutube,
             )
         }
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
+        btnRestart.setOnClickListener {
             setUIForStarting(
                 runnable,
                 -3,
-                btnback,
+                btnBack,
                 btnChangeTimes,
-                btnyoutube
+                btnYoutube
             )
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/suG47Nx_H5A?t=42")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
        loadAllStandardSounds()
     }

@@ -19,7 +19,7 @@ class LauncherActivity : AppCompatActivity() {
                 val intent = Intent(this@LauncherActivity, BriskMainActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
-                val errorMsg = "起動失敗: ${e::class.java.simpleName}: ${e.message}"
+                val errorMsg = getString(R.string.error_launch_brisk, e.message)
                 android.util.Log.e("LauncherActivity", errorMsg, e)
                 android.widget.Toast.makeText(this, errorMsg, android.widget.Toast.LENGTH_LONG).show()
             }
@@ -29,8 +29,8 @@ class LauncherActivity : AppCompatActivity() {
             try {
                 val intent = Intent(this@LauncherActivity, MainActivity::class.java)
                 startActivity(intent)
-            } catch (e: Exception) {
-                android.widget.Toast.makeText(this, "ワークアウト画面の起動に失敗しました", android.widget.Toast.LENGTH_LONG).show()
+            } catch (_: Exception) {
+                android.widget.Toast.makeText(this, getString(R.string.error_launch_workout), android.widget.Toast.LENGTH_LONG).show()
             }
         }
 

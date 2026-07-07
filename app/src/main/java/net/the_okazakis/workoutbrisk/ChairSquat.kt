@@ -10,20 +10,17 @@ class ChairSquat :  BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "$extimes/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                         tv2.text = getString(R.string.standup)
                         playSoundSingle(sndstand)
                     }
 
                     in 2..5 -> {
-                        if (num in 2..5) {
-                            playSoundSingle(sounds[num - 2])
-                        }
-
-                        tv2.text = "${num - 1} 秒"
+                        playSoundSingle(sounds.getOrNull(num - 2) ?: 0)
+                        tv2.text = getString(R.string.tv_seconds_format, num - 1)
                     }
 
                     6 -> {
@@ -33,15 +30,13 @@ class ChairSquat :  BaseActivity() {
                     }
 
                     in 7..11 -> {
-                        if (num in 7..11) {
-                            playSoundSingle(sounds[num - 7])
-                        }
-                        tv2.text = "${num - 6} 秒"
+                        playSoundSingle(sounds.getOrNull(num - 7) ?: 0)
+                        tv2.text = getString(R.string.tv_seconds_format, num - 6)
                     }
 
 
                     12 -> {
-                        num = 0; extimes++
+                        num = 0; exTimes++
                     }
                     else -> {}
                 }
@@ -49,7 +44,7 @@ class ChairSquat :  BaseActivity() {
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -67,9 +62,9 @@ class ChairSquat :  BaseActivity() {
         val myExplanation =
             "椅子に座り（腰掛ける程度）、両足を肩幅に広げつま先と膝を同じ方向に向ける、ゆっくり立つ。立ち上がったら、ゆっくり（座るイメージで）腰を下ろす。\n膝がつま先より出ないように。背中が曲がらないように。反動をつけない\n\n10回で1セット。1～2セット標準。"
 
-        val StandardText = "10回で1セット。1～2セット標準"
-        val masxlimit = 99
-        val maxRep =30
+        val standardText = "10回で1セット。1～2セット標準"
+        val maxLimit = 99
+        val maxRep = 30
 
         // すべての共通初期化を実行
         initializeStandardSettings(myExplanation, defaultTimes, defaultReps)
@@ -77,35 +72,35 @@ class ChairSquat :  BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-1,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -1, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -1, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -1, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
         //Youtubeのリンクを開く
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             // 固有のURLを渡すだけ
             openYoutube("https://youtu.be/61gktuGYKfI")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
         loadSettingsTick(defaultTimes, defaultReps)
     }
@@ -117,6 +112,6 @@ class ChairSquat :  BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/${maxextimes} セット"   // ← UIも更新
+        updateHeaderUI()
     }
 }

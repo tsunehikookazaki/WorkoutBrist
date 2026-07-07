@@ -1,16 +1,8 @@
 package net.the_okazakis.workoutbrisk
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.media.AudioAttributes
-import android.media.SoundPool
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.TextView
+
 
 
 class Tsumasakidachi :  BaseActivity() {
@@ -22,12 +14,12 @@ class Tsumasakidachi :  BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "${extimes}/$maxextimes 回"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
                         tv2.text = getString(R.string.slow_up)
-                        playSoundSingle(sndslowup)
+                        playSoundSingle(sndSlowUp)
                     }
                     2 -> {}
                     3 -> {
@@ -42,10 +34,10 @@ class Tsumasakidachi :  BaseActivity() {
                         playSoundSingle(sounds[2])
                     }
                     7 -> {tv2.text =  getString(R.string.slow_down)
-                        playSoundSingle(sndslowdown)
+                        playSoundSingle(sndSlowDown)
                     }
                     8 ->  {
-                        extimes ++ ;num = 0
+                        exTimes ++ ;num = 0
                     }
                     else -> {}
                 }
@@ -53,7 +45,7 @@ class Tsumasakidachi :  BaseActivity() {
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -70,8 +62,8 @@ class Tsumasakidachi :  BaseActivity() {
           val myExplanation =
             "椅子または壁に手をつき、背筋を伸ばし、ゆっくりつま先立ちになる。ゆっくりかかとを下ろす。かかとは床につけないと効果的。息を止めない。15回標準。"
 
-          val StandardText ="運動回数15回標準　最大99回"
-          val masxlimit = 99
+          val standardText ="運動回数15回標準　最大99回"
+          val maxLimit = 99
           val maxRep =30
 
           // すべての共通初期化を実行
@@ -80,34 +72,34 @@ class Tsumasakidachi :  BaseActivity() {
           loadAllStandardSounds()
 
           // 各種クリックリスナー
-          btnstart.setOnClickListener {
-              setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+          btnStart.setOnClickListener {
+              setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
           }
 
 
-          btnstop.setOnClickListener {
-              setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+          btnStop.setOnClickListener {
+              setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
               handler.removeCallbacks(runnable)
           }
 
-          btnrerstart.setOnClickListener {
-              restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+          btnRestart.setOnClickListener {
+              restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
           }
 
-          btnspeed.setOnClickListener {
-              setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+          btnSpeed.setOnClickListener {
+              setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
           }
 
-          btnback.setOnClickListener {
+          btnBack.setOnClickListener {
               finish()
           }
 
-          btnyoutube.setOnClickListener {
+          btnYoutube.setOnClickListener {
               openYoutube("https://youtu.be/pVUqFOD_1M0?t=63")
           }
           btnChangeTimes.setOnClickListener {
               // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-              openChangeTimes(StandardText, masxlimit,maxRep)
+              openChangeTimes(standardText, maxLimit,maxRep)
           }
       }
     override fun onDestroy() {

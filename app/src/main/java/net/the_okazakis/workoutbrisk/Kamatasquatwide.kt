@@ -12,41 +12,41 @@ class Kamatasquatwide :  BaseActivity() {
         override fun run() {
             timeCount++
             num++
-            if (extimes <= maxextimes) {
+            if (exTimes <= maxExTimes) {
                 when (num) {
                     1 -> {
-                        tv.text = "$extimes/$maxextimes 回"
-                        tv2.text = "ゆっくり沈んで"
+                        tv.text = getString(R.string.tv_times_format, exTimes, maxExTimes)
+                        tv2.text = getString(R.string.msg_sink_slowly)
                         playSoundSingle(sndsizunde)
                     }
 
                     in 2..4 -> {
-                        tv2.text = "${num-1}"
+                        tv2.text = getString(R.string.tv_seconds_format, num - 1)
                         playSoundSingle(sounds[num - 2])
                     }
                     in 5..7 -> {
-                        tv2.text = "耐えて"
+                        tv2.text = getString(R.string.msg_endure)
                         playSoundSingle(sndtaete)
                     }
                     8 -> {
                         tv2.text = getString(R.string.slow_up)
-                        playSoundSingle(sndslowup)
+                        playSoundSingle(sndSlowUp)
                     }
 
                     in 9..11 -> {
-                        tv2.text = "${num-8}"
+                        tv2.text = getString(R.string.tv_seconds_format, num - 8)
                         playSoundSingle(sounds[num - 9])
 
                     }
                     12 ->{
-                        num = 0; extimes++
+                        num = 0; exTimes++
                     }
                 }
                 // ← これ追加
                 handler.postDelayed(this, 1000)
 
             } else {
-                handleTrainingComplete(tv2, btnback, btnChangeTimes, btnyoutube) {
+                handleTrainingComplete(tv2, btnBack, btnChangeTimes, btnYoutube) {
                     isSaved = true
                     playSoundSingle(sndend)
                 }
@@ -68,8 +68,8 @@ class Kamatasquatwide :  BaseActivity() {
                 "膝が内側に入らないように気を付ける。" +
                 "呼吸を止めない\n\n10回で1セット。1セット標準\n\n"
 
-        val StandardText ="10回で1セット。1セット標準。"
-        val masxlimit = 99
+        val standardText ="10回で1セット。1セット標準。"
+        val maxLimit = 99
         val maxRep =30
 
         // すべての共通初期化を実行
@@ -78,34 +78,34 @@ class Kamatasquatwide :  BaseActivity() {
         loadAllStandardSounds()
 
         // 各種クリックリスナー
-        btnstart.setOnClickListener {
-            setUIForStarting(runnable,-2,btnback, btnChangeTimes, btnyoutube)
+        btnStart.setOnClickListener {
+            setUIForStarting(runnable, -2, btnBack, btnChangeTimes, btnYoutube)
         }
 
 
-        btnstop.setOnClickListener {
-            setUIForStopping(btnback, btnChangeTimes, btnyoutube)
+        btnStop.setOnClickListener {
+            setUIForStopping(btnBack, btnChangeTimes, btnYoutube)
             handler.removeCallbacks(runnable)
         }
 
-        btnrerstart.setOnClickListener {
-            restartTraining(runnable,btnback,btnChangeTimes,btnyoutube)
+        btnRestart.setOnClickListener {
+            restartTraining(runnable, btnBack, btnChangeTimes, btnYoutube)
         }
 
-        btnspeed.setOnClickListener {
-            setUIForSpeedStarting(runnable, -3, btnback,btnyoutube, btnChangeTimes)
+        btnSpeed.setOnClickListener {
+            setUIForSpeedStarting(runnable, -3, btnBack, btnYoutube, btnChangeTimes)
         }
 
-        btnback.setOnClickListener {
+        btnBack.setOnClickListener {
             finish()
         }
 
-        btnyoutube.setOnClickListener {
+        btnYoutube.setOnClickListener {
             openYoutube("https://youtu.be/S3DJ0ke9624")
         }
         btnChangeTimes.setOnClickListener {
             // 引数なしで呼ぶだけ（必要なデータはBaseが持っているため）
-            openChangeTimes(StandardText, masxlimit,maxRep)
+            openChangeTimes(standardText, maxLimit, maxRep)
         }
 
         loadSettingsTick(defaultTimes, defaultReps)
@@ -120,6 +120,6 @@ class Kamatasquatwide :  BaseActivity() {
     override fun onResume() {
         super.onResume()
         loadSettingsTick(defaultTimes, defaultReps)
-        tv.text = "1/$maxextimes 回"   // ← UIも更新
+        updateHeaderUI()
     }
 }
