@@ -118,7 +118,7 @@
         android:padding="0dp"
         android:text="RESTART"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold|italic"
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"

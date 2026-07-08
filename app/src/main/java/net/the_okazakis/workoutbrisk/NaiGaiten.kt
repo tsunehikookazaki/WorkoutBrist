@@ -4,8 +4,8 @@ import android.os.Bundle
 
 class NaiGaiten : BaseActivity() {
 
-    private val defaultTimes = 1
-    private val defaultReps = 10
+    private val defaultTimes = 10   //セット当たり回数秒数
+    private val defaultReps = 1   //セット数　
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++

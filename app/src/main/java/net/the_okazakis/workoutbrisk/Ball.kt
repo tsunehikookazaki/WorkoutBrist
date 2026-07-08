@@ -3,8 +3,8 @@ package net.the_okazakis.workoutbrisk
 import android.os.Bundle
 class Ball : BaseActivity() {
 
-    private val defaultTimes = 1
-    private val defaultReps = 3
+    private val defaultTimes = 3   //セット当たり回数秒数
+    private val defaultReps = 1   //セット数　
     private val runnable = object : Runnable {
         override fun run() {
             timeCount++
