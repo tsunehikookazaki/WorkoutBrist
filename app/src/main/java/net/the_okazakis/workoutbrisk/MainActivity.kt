@@ -2,6 +2,7 @@ package net.the_okazakis.workoutbrisk
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import androidx.core.net.toUri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -259,6 +260,11 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.menu_stop_app -> {
                 finishAndRemoveTask()
+                true
+            }
+            R.id.menu_jtrc -> {
+                val intent = Intent(Intent.ACTION_VIEW, "https://www.jtrc.or.jp/".toUri())
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

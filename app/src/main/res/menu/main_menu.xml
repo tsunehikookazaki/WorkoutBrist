@@ -17,4 +17,8 @@
         android:id="@+id/menu_stop_app"
         android:title="アプリの完全停止"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_jtrc"
+        android:title="@string/menu_jtrc"
+        app:showAsAction="never" />
 </menu>
